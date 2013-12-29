@@ -1,0 +1,50 @@
+doctype html
+html
+	head
+		title Chat
+		link(rel="stylesheet", href="../style.css")
+		script(src='http://code.jquery.com/jquery-1.7.1.min.js')
+		script(src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js')
+		script(src="/socket.io/socket.io.js")
+		script(src="/script.js")
+	body
+		div.container#main
+			div.navbar.navbar-fixed-top
+				div.navbar-inner
+					div.container
+						a.brand(href="#") Chat : Node.js + Socket.io
+			div#chatEntries
+			div.row#entries
+				input(type='text')#messageInput
+				div.btn-group
+					button.btn#submit(data-loading-text="Send") Send
+					button.btn.dropdown-toggle(data-toggle="dropdown")
+						span.caret
+					ul.dropdown-menu
+						li
+							a#edit(href="#modalPseudo", data-toggle="modal")
+								i.icon-user
+								| Change name
+						li
+							a#info(href="#modalInfos", data-toggle="modal")
+								i.icon-info-sign
+								| Infos
+			div#nbUsersDiv
+				p There is 
+					span#nbUsers
+					|  connected user(s).
+	div.modal.fade#modalPseudo
+		div.modal-header
+			h3 Choose a name
+		div.modal-body
+			p Choose a name :
+			input(type='text')#pseudoInput
+			div.alert.alert-error#alertPseudo
+				| This name is already used ! Choose another one.
+		div.modal-footer
+			button.btn.btn-primary#pseudoSubmit Go to the chat
+	div.modal.fade#modalInfos
+		div.modal-header
+			h3 Infos
+		div.modal-body
+			p 	cool
