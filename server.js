@@ -44,11 +44,10 @@ console.log('Server listening on port ' + appPort);
 
 // Handle the socket.io connections
 
-var users = 0; //count the users
-
+var global_users = 0; //count the global_users
 
 io.sockets.on('connection', function(socket) { // First connection
-	users += 1; // Add 1 to the count
+	global_users += 1; // Add 1 to the count
 	
 	socket.on('handshake', function(chatroomid, psuedo) {
 		console.log(chatroomid + ":" + psuedo);
@@ -64,7 +63,7 @@ io.sockets.on('connection', function(socket) { // First connection
 		socket.broadcast.to(socket.room).emit('updatechat', 'SERVER', socket.username + ' has connected to this room');
 		socket.emit('authorized');
 		//tell room to reload users now that a new person's joined 
-		reloadUsers(socket.room);
+		refreshUserlist(socket.room);
 	});
 
 	socket.on('message', function (data) { // Broadcast the message to all
@@ -92,22 +91,23 @@ io.sockets.on('connection', function(socket) { // First connection
 	// 	}
 	// });
 	socket.on('disconnect', function () { // Disconnection of the client
-		users -= 1;
-		reloadUsers();
-		if (pseudoSet(socket))
-		{
-			var pseudo;
-			socket.get('pseudo', function(err, name) {
-				pseudo = name;
-			});
-			var index = pseudoArray.indexOf(pseudo);
-			pseudo.slice(index - 1, 1);
-		}
+		global_users -= 1;
+		socket.leave(socket.room);
+		refreshUserlist(socket.room);
+		// if (pseudoSet(socket))
+		// {
+		// 	var pseudo;
+		// 	socket.get('pseudo', function(err, name) {
+		// 		pseudo = name;
+		// 	});
+		// 	var index = pseudoArray.indexOf(pseudo);
+		// 	pseudo.slice(index - 1, 1);
+		// }
 	});
 });
 
 // Send the list of users to everyone in the room
-function reloadUsers(room) { 
+function refreshUserlist(room) { 
 
 	//compile a list of all usernames in the room
 	var roomClients = io.sockets.clients(room);
