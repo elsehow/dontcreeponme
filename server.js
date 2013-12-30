@@ -11,11 +11,10 @@ var jade = require('jade');
 
 // My stuff
 
-var chat = require('./chat');
 
-var appPort = 16558;
+var appPort = 16560;
 
-var pseudoArray = ['admin'];
+var usernames = {};
 
 // Views Options
 
@@ -37,9 +36,6 @@ app.get('/chat/:id', function(req, res) {
 	var id = req.params.id;
 	console.log('requesting ' + id);
 
-	// *
-	// data is being passed to our jade template below
-	// but i don't understand how data is being passed to it exactly. jquery?
 	res.render('chat.jade');
 });
 
@@ -50,44 +46,49 @@ console.log('Server listening on port ' + appPort);
 
 var users = 0; //count the users
 
-//*
-// this is event-based, i get it
-// but i'm not sure how to abstract this representation of a chat interaction
-// and generalize it for different ports. 
-// "what calls this function," is what my OO mind wants to ask?
 
 io.sockets.on('connection', function(socket) { // First connection
 	users += 1; // Add 1 to the count
 	reloadUsers(); // Send the count to all the users
 	
-	socket.on('join', function(data) {
-		// data is the room name
-		socket.join(data);
+	socket.on('join', function(chatroomid, psuedo) {
+		console.log(chatroomid + ":" + psuedo);
+		//store username in the session for this client
+		socket.username = psuedo;
+		//store chatroom in the session for this client
+		socket.room = chatroomid;
+		// add the client's username to the global list
+		usernames[socket.username] = socket.username;
+		// chatroomid is the room name
+		socket.join(chatroomid);
+		// echo to room 1 that a person has connected to their room
+		socket.broadcast.to(socket.room).emit('updatechat', 'SERVER', socket.username + ' has connected to this room');
 	});
 
 	socket.on('message', function (data) { // Broadcast the message to all
-		if(pseudoSet(socket))
-		{
-			var transmit = {date : new Date().toISOString(), pseudo : returnPseudo(socket), message : data};
-			socket.broadcast.emit('message', transmit);
-			console.log("user "+ transmit['pseudo'] +" said \""+data+"\"");
-		}
+		// if(pseudoSet(socket))
+		// {
+			var transmit = {date : new Date().toISOString(), pseudo : socket.username, message : data};
+			io.sockets.in(socket.room).emit('message', transmit);
+			//socket.broadcast.emit('message', transmit);
+			console.log("user "+ transmit['pseudo'] +" said \""+data+"\" to " + socket.room);
+		//}
 	});
 
-	socket.on('setPseudo', function (data) { // Assign a name to the user
-		if (pseudoArray.indexOf(data) == -1) // Test if the name is already taken
-		{
-			socket.set('pseudo', data, function(){
-				pseudoArray.push(data);
-				socket.emit('pseudoStatus', 'ok');
-				console.log("user " + data + " connected");
-			});
-		}
-		else
-		{
-			socket.emit('pseudoStatus', 'error') // Send the error
-		}
-	});
+	// socket.on('setPseudo', function (data) { // Assign a name to the user
+	// 	if (pseudoArray.indexOf(data) == -1) // Test if the name is already taken
+	// 	{
+	// 		socket.set('pseudo', data, function(){
+	// 			pseudoArray.push(data);
+	// 			socket.emit('pseudoStatus', 'ok');
+	// 			console.log("user " + data + " connected");
+	// 		});
+	// 	}
+	// 	else
+	// 	{
+	// 		socket.emit('pseudoStatus', 'error') // Send the error
+	// 	}
+	// });
 	socket.on('disconnect', function () { // Disconnection of the client
 		users -= 1;
 		reloadUsers();

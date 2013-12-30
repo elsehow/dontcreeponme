@@ -21,7 +21,7 @@ l||(a.returnValue=!1)}};(function(){window.addEventListener?(this.addEventListen
 
 
 var messageContainer, submitButton;
-var pseudo = "";
+
 
 // Init
 $(function() {
@@ -29,10 +29,10 @@ $(function() {
 	submitButton = $("#submit");
 	bindButton();
 	window.setInterval(time, 1000*10);
-	$("#alertPseudo").hide();
-	$('#modalPseudo').modal('show');
-	$("#pseudoSubmit").click(function() {setPseudo()});
-	$("#chatEntries").slimScroll({height: '600px'});
+	// $("#alertPseudo").hide();
+	// $('#modalPseudo').modal('show');
+	// $("#pseudoSubmit").click(function() {setPseudo()});
+	// $("#chatEntries").slimScroll({height: '600px'});
 	submitButton.click(function() {sentMessage();});
 	setHeight();
 });
@@ -40,11 +40,15 @@ $(function() {
 //Socket.io
 var socket = io.connect();
 
+var pseudonym = '';
+
 var roomName = document.location.pathname.split('/chat/')[1];
 
 socket.on('connect', function() {
-  socket.emit('join', roomName);
-	console.log('connected, sent join ' + roomName);
+	psuedonym = prompt("pick a psuedonym?");
+  	socket.emit('join', roomName, psuedonym);
+  	//	all you need is for the client to broadcast to its rooms
+	console.log(psuedonym + ' connected, sent join ' + roomName);
 });
 
 socket.on('nbUsers', function(msg) {
@@ -52,25 +56,25 @@ socket.on('nbUsers', function(msg) {
 });
 
 socket.on('message', function(data) {
-	addMessage(data['message'], data['pseudo'], new Date().toISOString(), false);
-	console.log(data);
+		var from = JSON.stringify( data['pseudo'] );
+		if (!from.equals(psuedonym)) {
+			addMessage(data['message'], from, new Date().toISOString(), false);
+		}
+		
+		console.log(data);
+
 });
 
 //Help functions
 function sentMessage() {
 	if (messageContainer.val() != "") 
 	{
-		if (pseudo == "") 
-		{
-			$('#modalPseudo').modal('show');
-		}
-		else 
-		{
-			socket.broadcast.to(roomName).emit('message', messageContainer.val());
+			socket.emit('message',messageContainer.val());
+//			socket.broadcast.to(roomName).emit('message', messageContainer.val());
 			addMessage(messageContainer.val(), "Me", new Date().toISOString(), true);
 			messageContainer.val('');
 			submitButton.button('loading');
-		}
+		
 	}
 }
 
@@ -89,24 +93,24 @@ function bindButton() {
 	});
 }
 
-function setPseudo() {
-	if ($("#pseudoInput").val() != "")
-	{
-		socket.emit('setPseudo', $("#pseudoInput").val());
-		socket.on('pseudoStatus', function(data){
-			if(data == "ok")
-			{
-				$('#modalPseudo').modal('hide');
-				$("#alertPseudo").hide();
-				pseudo = $("#pseudoInput").val();
-			}
-			else
-			{
-				$("#alertPseudo").slideDown();
-			}
-		})
-	}
-}
+// function setPseudo() {
+// 	if ($("#pseudoInput").val() != "")
+// 	{
+// 		socket.emit('setPseudo', $("#pseudoInput").val());
+// 		socket.on('pseudoStatus', function(data){
+// 			if(data == "ok")
+// 			{
+// 				$('#modalPseudo').modal('hide');
+// 				$("#alertPseudo").hide();
+// 				pseudo = $("#pseudoInput").val();
+// 			}
+// 			else
+// 			{
+// 				$("#alertPseudo").slideDown();
+// 			}
+// 		})
+// 	}
+// }
 
 function time() {
 	$("time").each(function(){
