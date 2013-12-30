@@ -43,11 +43,12 @@ var socket = io.connect();
 
 var pseudonym = '';
 
-var roomName = document.location.pathname.split('/chat/')[1];
+var roomName = document.location.pathname.split('/')[1];
 
 socket.on('connect', function() {
 	// pseudonym = prompt("pick a pseudonym?");
  //  	socket.emit('joinattempt', roomName, pseudonym);
+ console.log("tryna join " + roomName);
 });
 
 socket.on('newuserlist', function(msg) {
