@@ -27,12 +27,14 @@ var messageContainer, submitButton;
 $(function() {
 	messageContainer = $('#messageInput');
 	submitButton = $("#submit");
-	bindButton();
+	bindSendButton();
 	window.setInterval(time, 1000*10);
 	$("#main").hide();
 	$("#alertPseudo").hide();
 	$('#modalPseudo').modal('show');
 	$("#pseudoSubmit").click(function() {setPseudo()});
+	$('#pseudoInput').focus().click();
+	bindEnterToPseudoSubmit();
 	$("#chatEntries").slimScroll({height: '600px'});
 	submitButton.click(function() {sentMessage();});
 	setHeight();
@@ -87,17 +89,31 @@ function addMessage(msg, pseudo, date, self) {
 	time();
 }
 
-function bindButton() {
+function bindSendButton() {
 	submitButton.button('loading');
 	messageContainer.on('input', function() {
 		if (messageContainer.val() == "") submitButton.button('loading');
 		else submitButton.button('reset');
 	});
+}
 
+function bindEnterToPseudoSubmit() {
+	// when the client hits ENTER on their keyboard
+	$('#pseudoInput').keypress(function(e) {
+		if(e.which == 13) {
+			$(this).blur();
+			// submit the message
+			$('#pseudoSubmit').focus().click();
+		}
+	});
+}
+
+function bindEnterToSendMessage() {
 	// when the client hits ENTER on their keyboard
 	$('#messageInput').keypress(function(e) {
 		if(e.which == 13) {
 			$(this).blur();
+			// submit the message
 			$('#submit').focus().click();
 			$('#messageInput').focus().click();
 		}
@@ -114,9 +130,15 @@ function setPseudo() {
 		socket.on('authresponse', function(data){
 			if(data.status == "ok")
 			{
+				// we are in, hide the modal interface
 				$('#modalPseudo').modal('hide');
 				$("#alertPseudo").hide();
+				// show chat window
 				$("#main").show();
+				// bind enter to send
+				bindEnterToSendMessage();
+				// highlight the text entry field
+				$('#messageInput').focus().click();
 				
 			}
 			else
