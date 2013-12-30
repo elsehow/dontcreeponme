@@ -30,7 +30,7 @@ app.get('/', function(req, res){
 });
 
 // lazy handling for chatroom IDs.
-app.get('/chat/:id', function(req, res) {
+app.get('/:id', function(req, res) {
 	var id = req.params.id;
 	console.log('requesting ' + id);
 
