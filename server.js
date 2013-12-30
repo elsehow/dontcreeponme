@@ -49,7 +49,6 @@ var users = 0; //count the users
 
 io.sockets.on('connection', function(socket) { // First connection
 	users += 1; // Add 1 to the count
-	reloadUsers(); // Send the count to all the users
 	
 	socket.on('handshake', function(chatroomid, psuedo) {
 		console.log(chatroomid + ":" + psuedo);
@@ -64,6 +63,8 @@ io.sockets.on('connection', function(socket) { // First connection
 		// echo to room 1 that a person has connected to their room
 		socket.broadcast.to(socket.room).emit('updatechat', 'SERVER', socket.username + ' has connected to this room');
 		socket.emit('authorized');
+		//tell room to reload users now that a new person's joined 
+		reloadUsers(socket.room);
 	});
 
 	socket.on('message', function (data) { // Broadcast the message to all
@@ -105,8 +106,20 @@ io.sockets.on('connection', function(socket) { // First connection
 	});
 });
 
-function reloadUsers() { // Send the count of the users to all
-	io.sockets.emit('nbUsers', {"nb": users});
+// Send the list of users to everyone in the room
+function reloadUsers(room) { 
+
+	//compile a list of all usernames in the room
+	var roomClients = io.sockets.clients(room);
+	var room_usernames = [];
+	for (var i=0;i<roomClients.length;i++) {
+		room_usernames.push(roomClients[i]['username']);
+
+	}
+
+	//send this list to the clients in the room	
+	io.sockets.in(room).emit('newuserlist', {"userlist":room_usernames});
+
 }
 
 function pseudoSet(socket) { // Test if the user has a name

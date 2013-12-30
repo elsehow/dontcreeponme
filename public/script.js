@@ -53,8 +53,8 @@ socket.on('authorized', function() {
 	console.log('authorized.');
 })
 
-socket.on('nbUsers', function(msg) {
-	$("#nbUsers").html(msg.nb);
+socket.on('newuserlist', function(msg) {
+	refreshUserlist(msg.userlist);
 });
 
 socket.on('message', function(data) {
@@ -78,6 +78,10 @@ function sentMessage() {
 			submitButton.button('loading');
 		
 	}
+}
+
+function refreshUserlist(usernames) {
+	$('#userlist').html(usernames.join(', '));
 }
 
 function addMessage(msg, pseudo, date, self) {
