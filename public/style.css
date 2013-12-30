@@ -692,18 +692,15 @@ a.thumbnail:hover{border-color:#0088cc;-webkit-box-shadow:0 1px 4px rgba(0, 105,
 	padding-top: 70px;
 }
 #chatEntries {
-    border: 1px solid grey;
-    border-radius: 5px;
-    background-color: rgba(0,0,0,.05);
+    border: 1px solid gray;
     margin-bottom: 20px;
     height: 600px;
-    box-shadow: 0 0 10px rgba(0,0,0,.5);
 }
 .message {
 	overflow: hidden;
 	padding: 0 12px;
 	color: black;
-	background: #ababab; /* Old browsers */
+	background: #fff; /* Old browsers */
 	float: left;
 	margin-left: 0;
 	width: 914px;
@@ -712,9 +709,8 @@ a.thumbnail:hover{border-color:#0088cc;-webkit-box-shadow:0 1px 4px rgba(0, 105,
     border-bottom:1px solid rgba(0, 0, 0, .1);
 }
 .self {
-	background: #c7c7c7; /* Old browsers */
+	background: #f0f0f0; /* Old browsers */
 	color: black;
-	text-align: right;
 }
 .infos {
 	font-size: 10px;
