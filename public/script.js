@@ -77,8 +77,10 @@ function sentMessage() {
 }
 
 function refreshUserlist(usernames) {
-	$('#usernum').html(usernames.length);
-	$('#userlist').html(usernames.join(', '));
+	if (usernames.length < 2)
+		$('#userlistDiv').html("You're the only one here.");
+	else 
+		$('#userlistDiv').html('There are ' + usernames.length + ' people here: ' + usernames.join(', '));
 }
 
 function addMessage(msg, pseudo, date, self) {

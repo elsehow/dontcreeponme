@@ -22,20 +22,16 @@ html
 								i.icon-user
 								| Change name
 			div#userlistDiv
-				p There's 
-					span#usernum
-					|  person/people here: 
-					span#userlist
-					| .
+				| 
 	div.modal.fade#modalPseudo
 		div.modal-header
-			h3 Choose a name
+			h3 Choose a pseudonym?
 		div.modal-body
-			p Choose a name :
+			p Go ahead:
 			input(type='text')#pseudoInput
 			div.alert.alert-error#alertPseudo
 				| 
-		div.modal-footer
-			button.btn.btn-primary#pseudoSubmit Go chat
 		div.modal-body
 			p 	You're about to enter an off-the-record chat. Only the people in the room with you at the same time will recieve your messages. Nothing will be stored permanently on our servers. You are not being tracked.
+		div.modal-footer
+			button.btn.btn-primary#pseudoSubmit Go chat
