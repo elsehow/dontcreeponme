@@ -93,6 +93,15 @@ function bindButton() {
 		if (messageContainer.val() == "") submitButton.button('loading');
 		else submitButton.button('reset');
 	});
+
+	// when the client hits ENTER on their keyboard
+	$('#messageInput').keypress(function(e) {
+		if(e.which == 13) {
+			$(this).blur();
+			$('#submit').focus().click();
+			$('#messageInput').focus().click();
+		}
+	});
 }
 
 function setPseudo() {
