@@ -57,8 +57,6 @@ socket.on('newuserlist', function(msg) {
 socket.on('message', function(data) {
 	// don't show a message if it's from us
 	var from = data['pseudo'];
-	console.log("this is from " + from);
-	console.log("i am " + pseudonym);
 	if (from !== pseudonym) {
 		addMessage(data['message'], from, new Date().toISOString(), false);
 	}
