@@ -21,12 +21,10 @@ html
 							a#edit(href="#modalPseudo", data-toggle="modal")
 								i.icon-user
 								| Change name
-						li
-							a#info(href="#modalInfos", data-toggle="modal")
-								i.icon-info-sign
-								| Infos
 			div#userlistDiv
-				p Connected users: 
+				p There's 
+					span#usernum
+					|  person/people here: 
 					span#userlist
 					| .
 	div.modal.fade#modalPseudo

@@ -29,6 +29,7 @@ $(function() {
 	submitButton = $("#submit");
 	bindButton();
 	window.setInterval(time, 1000*10);
+	$("#main").hide();
 	$("#alertPseudo").hide();
 	$('#modalPseudo').modal('show');
 	$("#pseudoSubmit").click(function() {setPseudo()});
@@ -55,7 +56,9 @@ socket.on('newuserlist', function(msg) {
 
 socket.on('message', function(data) {
 	// don't show a message if it's from us
-	var from = JSON.stringify( data['pseudo'] );
+	var from = data['pseudo'];
+	console.log("this is from " + from);
+	console.log("i am " + pseudonym);
 	if (from !== pseudonym) {
 		addMessage(data['message'], from, new Date().toISOString(), false);
 	}
@@ -75,6 +78,7 @@ function sentMessage() {
 }
 
 function refreshUserlist(usernames) {
+	$('#usernum').html(usernames.length);
 	$('#userlist').html(usernames.join(', '));
 }
 
@@ -96,6 +100,8 @@ function bindButton() {
 function setPseudo() {
 	if ($("#pseudoInput").val() != "")
 	{
+		pseudonym = $("#pseudoInput").val();
+
 		socket.emit('joinattempt', roomName, $("#pseudoInput").val());
 
 		socket.on('authresponse', function(data){
@@ -103,7 +109,8 @@ function setPseudo() {
 			{
 				$('#modalPseudo').modal('hide');
 				$("#alertPseudo").hide();
-				pseudo = $("#pseudoInput").val();
+				$("#main").show();
+				
 			}
 			else
 			{
