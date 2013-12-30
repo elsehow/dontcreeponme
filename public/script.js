@@ -46,10 +46,12 @@ var roomName = document.location.pathname.split('/chat/')[1];
 
 socket.on('connect', function() {
 	psuedonym = prompt("pick a psuedonym?");
-  	socket.emit('join', roomName, psuedonym);
-  	//	all you need is for the client to broadcast to its rooms
-	console.log(psuedonym + ' connected, sent join ' + roomName);
+  	socket.emit('handshake', roomName, psuedonym);
 });
+
+socket.on('authorized', function() {
+	console.log('authorized.');
+})
 
 socket.on('nbUsers', function(msg) {
 	$("#nbUsers").html(msg.nb);

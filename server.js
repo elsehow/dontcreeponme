@@ -51,7 +51,7 @@ io.sockets.on('connection', function(socket) { // First connection
 	users += 1; // Add 1 to the count
 	reloadUsers(); // Send the count to all the users
 	
-	socket.on('join', function(chatroomid, psuedo) {
+	socket.on('handshake', function(chatroomid, psuedo) {
 		console.log(chatroomid + ":" + psuedo);
 		//store username in the session for this client
 		socket.username = psuedo;
@@ -63,6 +63,7 @@ io.sockets.on('connection', function(socket) { // First connection
 		socket.join(chatroomid);
 		// echo to room 1 that a person has connected to their room
 		socket.broadcast.to(socket.room).emit('updatechat', 'SERVER', socket.username + ' has connected to this room');
+		socket.emit('authorized');
 	});
 
 	socket.on('message', function (data) { // Broadcast the message to all
