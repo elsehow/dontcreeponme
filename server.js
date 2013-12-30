@@ -33,7 +33,6 @@ app.get('/', function(req, res){
 app.get('/:id', function(req, res) {
 	var id = req.params.id;
 	console.log('requesting ' + id);
-
 	res.render('chat.jade');
 });
 
@@ -51,13 +50,13 @@ io.sockets.on('connection', function(socket) { // First connection
 	socket.on('joinattempt', function(roomName, pseudo) {
 
 		// verify that they entered something
-		if (!pseudo) {
+		if (!pseudo || pseudo.length==0) {
 			socket.emit('authresponse', {'status':'Enter a username.'});
 		}
 
-		// verify that the username is 3-12 char
-		else if (pseudo.length<3 || pseudo.length>12) {
-			socket.emit('authresponse', {'status':"Usernames have to be 3-12 characters. Sorry."});
+		// verify that the username is 3-140 char
+		else if (pseudo.length>140) {
+			socket.emit('authresponse', {'status':"Usernames have to be 1-140 characters. Sorry."});
 		}
 
 		// verify that username doesn't contain any bad chars
@@ -105,6 +104,7 @@ function refreshUserlist(room) {
 	//compile a list of all usernames in the room
 	var roomClients = io.sockets.clients(room);
 	var room_usernames = [];
+	// TODO: this should be each() in underscore
 	for (var i=0;i<roomClients.length;i++) {
 		room_usernames.push(roomClients[i]['username']);
 

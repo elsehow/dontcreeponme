@@ -29,12 +29,11 @@ $(function() {
 	submitButton = $("#submit");
 	bindSendButton();
 	window.setInterval(time, 1000*10);
-	$("#main").hide();
-	$("#alertPseudo").hide();
-	$('#modalPseudo').modal('show');
-	$("#pseudoSubmit").click(function() {setPseudo()});
-	$('#pseudoInput').focus().click();
-	bindEnterToPseudoSubmit();
+
+	// setup interface for eliciting user's handle
+	showModalInterface();
+
+	// after getting user's handle
 	$("#chatEntries").slimScroll({height: '600px'});
 	submitButton.click(function() {sentMessage();});
 	setHeight();
@@ -110,14 +109,23 @@ function bindEnterToPseudoSubmit() {
 
 function bindEnterToSendMessage() {
 	// when the client hits ENTER on their keyboard
-	$('#messageInput').keypress(function(e) {
+	$(messageContainer).keypress(function(e) {
 		if(e.which == 13) {
 			$(this).blur();
 			// submit the message
-			$('#submit').focus().click();
-			$('#messageInput').focus().click();
+			$(submitButton).focus().click();
+			$(messageContainer).focus().click();
 		}
 	});
+}
+
+function showModalInterface() {
+	$("#main").hide();
+	$("#alertPseudo").hide();
+	$('#modalPseudo').modal('show');
+	$("#pseudoSubmit").click(function() {setPseudo()});
+	$('#pseudoInput').focus().click();
+	bindEnterToPseudoSubmit();
 }
 
 function setPseudo() {
@@ -138,7 +146,7 @@ function setPseudo() {
 				// bind enter to send
 				bindEnterToSendMessage();
 				// highlight the text entry field
-				$('#messageInput').focus().click();
+				$(messageContainer).focus().click();
 				
 			}
 			else
@@ -148,6 +156,14 @@ function setPseudo() {
 			}
 		})
 	}
+}
+
+
+function changeUsername() {
+
+	socket.emit('disconnect');
+	showModalInterface();
+
 }
 
 function time() {
