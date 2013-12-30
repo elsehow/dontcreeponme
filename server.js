@@ -43,31 +43,52 @@ console.log('Server listening on port ' + appPort);
 // Handle the socket.io connections
 
 var global_users = 0; //count the global_users
+var regex =  /[^A-Za-z0-9 ]/; // regular expression for validating usernames
 
 io.sockets.on('connection', function(socket) { // First connection
 	global_users += 1; // Add 1 to the count
 	
-	socket.on('handshake', function(chatroomid, psuedo) {
-		console.log(chatroomid + ":" + psuedo);
-		//store username in the session for this client
-		socket.username = psuedo;
-		//store chatroom in the session for this client
-		socket.room = chatroomid;
-		// add the client's username to the global list
-		usernames[socket.username] = socket.username;
-		// chatroomid is the room name
-		socket.join(chatroomid);
-		// echo to room 1 that a person has connected to their room
-		socket.broadcast.to(socket.room).emit('updatechat', 'SERVER', socket.username + ' has connected to this room');
-		socket.emit('authorized');
-		//tell room to reload users now that a new person's joined 
-		refreshUserlist(socket.room);
+	socket.on('joinattempt', function(roomName, pseudo) {
+
+		// verify that they entered something
+		if (!pseudo) {
+			socket.emit('error', {'reason':'Enter a username.'});
+		}
+
+		// verify that the username is 3-12 char
+		else if (pseudo.length<3 || pseudo.length>12) {
+			socket.emit('error', {'reason':"Usernames have to be 3-12 characters. Sorry."});
+		}
+
+		// verify that username doesn't contain any bad chars
+		else if (regex.test(pseudo)) {
+			socket.emit('error', {'reason':"For now usernames can only contain letters a-z and numbers. Sorry."});
+		}
+
+		// check that username is unique in this room
+		else if(!isUsernameUnique(pseudo,roomName)) {
+			socket.emit('error', {'reason':"That username's already taken in this room."});
+		}
+
+		// if all's well, allow joining:
+		else {
+			console.log(roomName + ":" + pseudo);
+			//store username in the session for this client
+			socket.username = pseudo;
+			//store chatroom in the session for this client
+			socket.room = roomName;
+			// only at this point does the socket officially join the room.
+			socket.join(roomName);
+			// echo to room 1 that a person has connected to their room
+			socket.broadcast.to(socket.room).emit('updatechat', 'SERVER', socket.username + ' has connected to this room');
+			//tell room to reload users now that a new person's joined 
+			refreshUserlist(socket.room);
+		}
 	});
 
 	socket.on('message', function (data) { // Broadcast the message to all
 		var transmit = {date : new Date().toISOString(), pseudo : socket.username, message : data};
 		io.sockets.in(socket.room).emit('message', transmit);
-		//socket.broadcast.emit('message', transmit);
 		console.log("user "+ transmit['pseudo'] +" said \""+data+"\" to " + socket.room);
 	});
 
@@ -94,20 +115,16 @@ function refreshUserlist(room) {
 
 }
 
-function pseudoSet(socket) { // Test if the user has a name
-	var test;
-	socket.get('pseudo', function(err, name) {
-		if (name == null ) test = false;
-		else test = true;
-	});
-	return test;
-}
 
-function returnPseudo(socket) { // Return the name of the user
-	var pseudo;
-	socket.get('pseudo', function(err, name) {
-		if (name == null ) pseudo = false;
-		else pseudo = name;
-	});
-	return pseudo;
+
+function isUsernameUnique(username, roomName) {
+	//verify that username is unique
+	var roomClients = io.sockets.clients(roomName);
+	// search for the username
+	var filter = roomClients.filter(function(v){ return v["username"] == username; });
+	// if we return results, username is not unique
+	if (filter.length>0) {
+		return false;
+	} // otherwise it's unique
+	return true;
 }

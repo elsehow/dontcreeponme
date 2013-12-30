@@ -45,12 +45,14 @@ var pseudonym = '';
 var roomName = document.location.pathname.split('/chat/')[1];
 
 socket.on('connect', function() {
-	psuedonym = prompt("pick a psuedonym?");
-  	socket.emit('handshake', roomName, psuedonym);
+	pseudonym = prompt("pick a pseudonym?");
+  	socket.emit('joinattempt', roomName, pseudonym);
 });
 
-socket.on('authorized', function() {
-	console.log('authorized.');
+
+socket.on('error', function(data) {
+	pseudonym = prompt(data.reason)
+	socket.emit('joinattempt', roomName, pseudonym)
 })
 
 socket.on('newuserlist', function(msg) {
@@ -58,13 +60,11 @@ socket.on('newuserlist', function(msg) {
 });
 
 socket.on('message', function(data) {
-		var from = JSON.stringify( data['pseudo'] );
-		if (!from.equals(psuedonym)) {
-			addMessage(data['message'], from, new Date().toISOString(), false);
-		}
-		
-		console.log(data);
-
+	// don't show a message if it's from us
+	var from = JSON.stringify( data['pseudo'] );
+	if (from !== pseudonym) {
+		addMessage(data['message'], from, new Date().toISOString(), false);
+	}
 });
 
 //Help functions
