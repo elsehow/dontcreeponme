@@ -14,8 +14,6 @@ var jade = require('jade');
 
 var appPort = 16560;
 
-var usernames = {};
-
 // Views Options
 
 app.set('views', __dirname + '/views');
@@ -67,42 +65,16 @@ io.sockets.on('connection', function(socket) { // First connection
 	});
 
 	socket.on('message', function (data) { // Broadcast the message to all
-		// if(pseudoSet(socket))
-		// {
-			var transmit = {date : new Date().toISOString(), pseudo : socket.username, message : data};
-			io.sockets.in(socket.room).emit('message', transmit);
-			//socket.broadcast.emit('message', transmit);
-			console.log("user "+ transmit['pseudo'] +" said \""+data+"\" to " + socket.room);
-		//}
+		var transmit = {date : new Date().toISOString(), pseudo : socket.username, message : data};
+		io.sockets.in(socket.room).emit('message', transmit);
+		//socket.broadcast.emit('message', transmit);
+		console.log("user "+ transmit['pseudo'] +" said \""+data+"\" to " + socket.room);
 	});
 
-	// socket.on('setPseudo', function (data) { // Assign a name to the user
-	// 	if (pseudoArray.indexOf(data) == -1) // Test if the name is already taken
-	// 	{
-	// 		socket.set('pseudo', data, function(){
-	// 			pseudoArray.push(data);
-	// 			socket.emit('pseudoStatus', 'ok');
-	// 			console.log("user " + data + " connected");
-	// 		});
-	// 	}
-	// 	else
-	// 	{
-	// 		socket.emit('pseudoStatus', 'error') // Send the error
-	// 	}
-	// });
 	socket.on('disconnect', function () { // Disconnection of the client
 		global_users -= 1;
 		socket.leave(socket.room);
 		refreshUserlist(socket.room);
-		// if (pseudoSet(socket))
-		// {
-		// 	var pseudo;
-		// 	socket.get('pseudo', function(err, name) {
-		// 		pseudo = name;
-		// 	});
-		// 	var index = pseudoArray.indexOf(pseudo);
-		// 	pseudo.slice(index - 1, 1);
-		// }
 	});
 });
 
