@@ -29,10 +29,10 @@ $(function() {
 	submitButton = $("#submit");
 	bindButton();
 	window.setInterval(time, 1000*10);
-	// $("#alertPseudo").hide();
-	// $('#modalPseudo').modal('show');
-	// $("#pseudoSubmit").click(function() {setPseudo()});
-	// $("#chatEntries").slimScroll({height: '600px'});
+	$("#alertPseudo").hide();
+	$('#modalPseudo').modal('show');
+	$("#pseudoSubmit").click(function() {setPseudo()});
+	$("#chatEntries").slimScroll({height: '600px'});
 	submitButton.click(function() {sentMessage();});
 	setHeight();
 });
@@ -45,15 +45,9 @@ var pseudonym = '';
 var roomName = document.location.pathname.split('/chat/')[1];
 
 socket.on('connect', function() {
-	pseudonym = prompt("pick a pseudonym?");
-  	socket.emit('joinattempt', roomName, pseudonym);
+	// pseudonym = prompt("pick a pseudonym?");
+ //  	socket.emit('joinattempt', roomName, pseudonym);
 });
-
-
-socket.on('error', function(data) {
-	pseudonym = prompt(data.reason)
-	socket.emit('joinattempt', roomName, pseudonym)
-})
 
 socket.on('newuserlist', function(msg) {
 	refreshUserlist(msg.userlist);
@@ -99,24 +93,26 @@ function bindButton() {
 	});
 }
 
-// function setPseudo() {
-// 	if ($("#pseudoInput").val() != "")
-// 	{
-// 		socket.emit('setPseudo', $("#pseudoInput").val());
-// 		socket.on('pseudoStatus', function(data){
-// 			if(data == "ok")
-// 			{
-// 				$('#modalPseudo').modal('hide');
-// 				$("#alertPseudo").hide();
-// 				pseudo = $("#pseudoInput").val();
-// 			}
-// 			else
-// 			{
-// 				$("#alertPseudo").slideDown();
-// 			}
-// 		})
-// 	}
-// }
+function setPseudo() {
+	if ($("#pseudoInput").val() != "")
+	{
+		socket.emit('joinattempt', roomName, $("#pseudoInput").val());
+
+		socket.on('authresponse', function(data){
+			if(data.status == "ok")
+			{
+				$('#modalPseudo').modal('hide');
+				$("#alertPseudo").hide();
+				pseudo = $("#pseudoInput").val();
+			}
+			else
+			{
+				$('#alertPseudo').html(data.status);
+				$("#alertPseudo").slideDown();
+			}
+		})
+	}
+}
 
 function time() {
 	$("time").each(function(){

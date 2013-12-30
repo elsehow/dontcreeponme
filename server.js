@@ -52,22 +52,22 @@ io.sockets.on('connection', function(socket) { // First connection
 
 		// verify that they entered something
 		if (!pseudo) {
-			socket.emit('error', {'reason':'Enter a username.'});
+			socket.emit('authresponse', {'status':'Enter a username.'});
 		}
 
 		// verify that the username is 3-12 char
 		else if (pseudo.length<3 || pseudo.length>12) {
-			socket.emit('error', {'reason':"Usernames have to be 3-12 characters. Sorry."});
+			socket.emit('authresponse', {'status':"Usernames have to be 3-12 characters. Sorry."});
 		}
 
 		// verify that username doesn't contain any bad chars
 		else if (regex.test(pseudo)) {
-			socket.emit('error', {'reason':"For now usernames can only contain letters a-z and numbers. Sorry."});
+			socket.emit('authresponse', {'status':"For now usernames can only contain letters a-z and numbers. Sorry."});
 		}
 
 		// check that username is unique in this room
 		else if(!isUsernameUnique(pseudo,roomName)) {
-			socket.emit('error', {'reason':"That username's already taken in this room."});
+			socket.emit('authresponse', {'status':"That username's already taken in this room."});
 		}
 
 		// if all's well, allow joining:
@@ -79,8 +79,8 @@ io.sockets.on('connection', function(socket) { // First connection
 			socket.room = roomName;
 			// only at this point does the socket officially join the room.
 			socket.join(roomName);
-			// echo to room 1 that a person has connected to their room
-			socket.broadcast.to(socket.room).emit('updatechat', 'SERVER', socket.username + ' has connected to this room');
+			// tell user that they've been accepted
+			socket.emit('authresponse', {'status':'ok'});
 			//tell room to reload users now that a new person's joined 
 			refreshUserlist(socket.room);
 		}
