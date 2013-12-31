@@ -86,6 +86,8 @@ function refreshUserlist(usernames) {
 }
 
 function addMessage(msg, pseudo, date, self) {
+	//check msg for links
+	msg = replaceURLWithHTMLLinks(msg);
 	if(self) var classDiv = "row message self";
 	else var classDiv = "row message";
 	conversationContainer.append('<div class="'+classDiv+'"><p class="meta"><span class="pseudo">'+pseudo+'</span>, <time class="date" title="'+date+'">'+date+'</time></p><p>' + msg + '</p></div>');
@@ -178,3 +180,7 @@ function time() {
 	});
 }
 
+function replaceURLWithHTMLLinks(text) {
+    var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+    return text.replace(exp,"<a href='$1'>$1</a>"); 
+}
