@@ -20,23 +20,25 @@ g.css(j);c.css(j);b.wrap(n);b.parent().append(c);b.parent().append(g);c.draggabl
 l||(a.returnValue=!1)}};(function(){window.addEventListener?(this.addEventListener("DOMMouseScroll",v,!1),this.addEventListener("mousewheel",v,!1)):document.attachEvent("onmousewheel",v)})();w();"bottom"==u?(c.css({top:b.outerHeight()-c.outerHeight()}),h(0,!0)):"object"==typeof u&&(h(d(u).position().top,null,!0),m||c.hide())}});return this}});jQuery.fn.extend({slimscroll:jQuery.fn.slimScroll})})(jQuery);
 
 
-var messageContainer, submitButton;
+var messageContainer, submitButton, chatContainer;
 
 
 // Init
 $(function() {
 	messageContainer = $('#messageInput');
 	submitButton = $("#submit");
+	conversationContainer = $("#chatEntries")
 	bindSendButton();
 	window.setInterval(time, 1000*10);
 
 	// setup interface for eliciting user's handle
 	showModalInterface();
 
-	// after getting user's handle
-	$("#chatEntries").slimScroll({height: '600px'});
+	// set up scrolling
+	$("#chatEntries").slimScroll({height: '600px', start:'bottom'});
 	submitButton.click(function() {sentMessage();});
-	setHeight();
+	$(".slimScrollDiv").height('603');
+	$(".slimScrollDiv").css('overflow', 'visible');
 });
 
 //Socket.io
@@ -86,7 +88,9 @@ function refreshUserlist(usernames) {
 function addMessage(msg, pseudo, date, self) {
 	if(self) var classDiv = "row message self";
 	else var classDiv = "row message";
-	$("#chatEntries").append('<div class="'+classDiv+'"><p class="infos"><span class="pseudo">'+pseudo+'</span>, <time class="date" title="'+date+'">'+date+'</time></p><p>' + msg + '</p></div>');
+	conversationContainer.append('<div class="'+classDiv+'"><p class="meta"><span class="pseudo">'+pseudo+'</span>, <time class="date" title="'+date+'">'+date+'</time></p><p>' + msg + '</p></div>');
+	//force scrolling div toward bottom
+	conversationContainer.prop({ scrollTop: conversationContainer.prop("scrollHeight") });
 	time();
 }
 
@@ -174,7 +178,3 @@ function time() {
 	});
 }
 
-function setHeight() {
-	$(".slimScrollDiv").height('603');
-	$(".slimScrollDiv").css('overflow', 'visible')
-}

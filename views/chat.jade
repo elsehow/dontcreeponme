@@ -10,6 +10,7 @@ html
 	body
 		div.container#main
 			div#chatEntries
+			div#push
 			div.row#entries
 				input(type='text')#messageInput
 				div.btn-group
@@ -21,8 +22,8 @@ html
 							a#edit(onclick="changeUsername()")
 								i.icon-user
 								| Change name
-			div#userlistDiv
-				| 
+				div#userlistDiv
+					| 
 	div.modal.fade#modalPseudo
 		div.modal-header
 			h3 Choose a pseudonym?

@@ -687,44 +687,69 @@ a.thumbnail:hover{border-color:#0088cc;-webkit-box-shadow:0 1px 4px rgba(0, 105,
 .hide{display:none;}
 .show{display:block;}
 .invisible{visibility:hidden;}
-
+* {
+	margin:0;
+}
+html, body {
+	height:100%;
+}
 #main {
-	padding-top: 70px;
+	height: auto !important;
+	height: 100%;
+	margin-bottom:-4em;
+	width:80%;
+	max-width:815px;
+	min-width:260px;
+	overflow: scroll;
+} #entries {
+	height:4em;
 }
 #chatEntries {
-    border: 1px solid gray;
-    margin-bottom: 20px;
-    height: 600px;
-}
+	overflow: scroll;
+	margin-top:20px;
+} 
+
 .message {
+	box-sizing: border-box;
+	clear: both;
+	float: left;
+	max-width:100%;
+	word-wrap:break-word;
 	overflow: hidden;
 	padding: 0 12px;
 	color: black;
 	background: #fff; /* Old browsers */
-	float: left;
 	margin-left: 0;
-	width: 914px;
+	width:auto;
+	min-width:260px;
     -webkit-animation-name: flip;
     -webkit-animation-duration: 500ms;
     border-bottom:1px solid rgba(0, 0, 0, .1);
+    float:left;
 }
 .self {
+	float: right;
 	background: #f0f0f0; /* Old browsers */
 	color: black;
 }
-.infos {
-	font-size: 10px;
-	color: #5C5C5C;
-}
 .btn-group {	
     float: right;
+    width:10%;
+    min-width:80px;
 }
 #messageInput {
-	width: 830px;
-	margin-left: 20px;
+	float:left;
+	width:85%;
+	max-width:730px;
+	min-width:175px;
+}
+#userlistDiv {
+	float:left;
 }
 #entries {
-	margin-top: 10px;
+	padding-top:20px;
+	padding-left:25px;
+	padding-bottom: 10px;
 }
 @-webkit-keyframes flip {
 	0% {
