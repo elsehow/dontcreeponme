@@ -8,6 +8,7 @@ var server = http.createServer(app);
 var io = require('socket.io').listen(server);
 
 var jade = require('jade');
+var underscore = require('underscore');
 
 // My stuff
 
@@ -102,13 +103,7 @@ io.sockets.on('connection', function(socket) { // First connection
 function refreshUserlist(room) { 
 
 	//compile a list of all usernames in the room
-	var roomClients = io.sockets.clients(room);
-	var room_usernames = [];
-	// TODO: this should be each() in underscore
-	for (var i=0;i<roomClients.length;i++) {
-		room_usernames.push(roomClients[i]['username']);
-
-	}
+	var room_usernames = underscore.pluck( io.sockets.clients(room), 'username');
 
 	//send this list to the clients in the room	
 	io.sockets.in(room).emit('newuserlist', {"userlist":room_usernames});
