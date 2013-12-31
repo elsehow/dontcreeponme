@@ -740,6 +740,7 @@ html, body {
 #messageInput {
 	float:left;
 	width:85%;
+	word-wrap:break-word;
 	max-width:730px;
 	min-width:175px;
 }
