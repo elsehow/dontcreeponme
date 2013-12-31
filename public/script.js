@@ -49,8 +49,7 @@ var pseudonym = '';
 var roomName = document.location.pathname.split('/')[1];
 
 socket.on('connect', function() {
-	// pseudonym = prompt("pick a pseudonym?");
- //  	socket.emit('joinattempt', roomName, pseudonym);
+ 	setPageTitle(roomname);
 });
 
 socket.on('newuserlist', function(msg) {
@@ -172,6 +171,11 @@ function changeUsername() {
 	socket.emit('disconnect');
 	showModalInterface();
 
+}
+
+
+function setPageTitle(string) {
+	document.title = string;
 }
 
 function time() {
