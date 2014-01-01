@@ -149,13 +149,6 @@ function showModalInterface() {
 	$("#alertPseudo").hide();
 	$('#modalPseudo').modal('show');
 	$("#pseudoSubmit").click(function() {
-		//when this button's clicked, we disable it for a while to allow processing time
-		var btn = $(this);
-		btn.disabled=true;
-		btn.button('Loading...');
-		setTimeout(function () {
-            btn.button('Retry')
-        }, 8000)
 		// we set user's pseudonym here
 		setPseudo();
 	});
@@ -167,6 +160,10 @@ function showModalInterface() {
 function setPseudo() {
 	if ($("#pseudoInput").val() != "")
 	{
+		var btn = $('#pseudoSubmit');
+		btn.button('Loading...');
+		btn.disabled = true;
+
 		pseudonym = $("#pseudoInput").val();
 
 		socket.emit('joinattempt', roomName, $("#pseudoInput").val());
