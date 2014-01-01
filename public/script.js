@@ -39,7 +39,7 @@ $(function() {
 	showModalInterface();
 
 	// set up scrolling conversation window
-	chatsDivHeight = $( window ).height() - 80; // chat bar + padding = 80px in height
+	chatsDivHeight = $( window ).height() - 120; // the window height - the chat bar/bottom UI
 	$("#chatEntries").slimScroll({height: chatsDivHeight + 'px', start:'bottom'});
 	submitButton.click(function() {sentMessage();});
 	$(".slimScrollDiv").height(chatsDivHeight+3);
