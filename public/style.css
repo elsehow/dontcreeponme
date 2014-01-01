@@ -727,10 +727,16 @@ html, body {
     border-bottom:1px solid rgba(0, 0, 0, .1);
     float:left;
 }
+
 .self {
 	float: right;
 	background: #f0f0f0; /* Old browsers */
 	color: black;
+}
+.admin {
+	background:#f00000;
+} .admin meta {
+	visibility:hidden;
 }
 .btn-group {	
     float: right;

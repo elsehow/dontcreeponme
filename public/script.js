@@ -64,8 +64,14 @@ socket.on('message', function(data) {
 
 	// don't show a message if it's from us
 	var from = data['pseudo'];
-	if (from !== pseudonym)
-		addMessage(data['message'], from, new Date().toISOString(), false);
+
+	if (from == '<Lord DCOM bot>')
+		addMessage(data['message'], from, new Date().toISOString(), false, true);
+
+	// don't show a message if it's from us
+	else if (from !== pseudonym)
+		addMessage(data['message'], from, new Date().toISOString(), false, false);
+	
 
 	// increment unread message count if window's not in focus
 	if (!windowIsInFocus) {
@@ -94,12 +100,13 @@ function refreshUserlist(usernames) {
 		$('#userlistDiv').html('There are ' + usernames.length + ' people here: ' + usernames.join(', '));
 }
 
-function addMessage(msg, pseudo, date, self) {
+function addMessage(msg, pseudo, date, self, admin) {
 	//check msg for links
 	msg = replaceURLWithHTMLLinks(msg);
 	if(self) var classDiv = "row message self";
+	if(admin) var classDiv = "row message admin";
 	else var classDiv = "row message";
-	conversationContainer.append('<div class="'+classDiv+'"><p class="meta"><span class="pseudo">'+pseudo+'</span>, <time class="date" title="'+date+'">'+date+'</time></p><p>' + msg + '</p></div>');
+	conversationContainer.append('<div class="'+classDiv+'"><div class="meta">'+pseudo+' <time class="date" title="'+date+'">'+date+'</time></div><p>' + msg + '</p></div>');
 	//force scrolling div toward bottom
 	conversationContainer.prop({ scrollTop: conversationContainer.prop("scrollHeight") });
 	time();

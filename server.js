@@ -83,7 +83,7 @@ io.sockets.on('connection', function(socket) { // First connection
 			// tell user that they've been accepted
 			socket.emit('authresponse', {'status':'ok'});
 			//tell room to reload users now that a new person's joined 
-			refreshUserlist(socket.room);
+			announceNewUser(socket.room, socket.username, true);
 		}
 	});
 
@@ -96,18 +96,35 @@ io.sockets.on('connection', function(socket) { // First connection
 	socket.on('disconnect', function () { // Disconnection of the client
 		global_users -= 1;
 		socket.leave(socket.room);
-		refreshUserlist(socket.room);
+		announceNewUser(socket.room, socket.username, false);
 	});
 });
 
 // Send the list of users to everyone in the room
-function refreshUserlist(room) { 
+// announce new user's name over chat too
+function announceNewUser(room) { 
 
 	//compile a list of all usernames in the room
 	var room_usernames = underscore.pluck( io.sockets.clients(room), 'username');
 
 	//send this list to the clients in the room	
 	io.sockets.in(room).emit('newuserlist', {"userlist":room_usernames});
+
+	//send a message to all users announcing the join
+	if (arguments[1]) {
+
+		var username = arguments[1];
+		var isConnectEvent = arguments[2];
+
+		var msg = username;
+		if (isConnectEvent) {
+			msg += " enters the room.";
+		} else {
+			msg += " leaves the room.";
+		}
+		var transmit = {date : new Date().toISOString(), pseudo : '<Lord DCOM bot>', message : msg};
+		io.sockets.in(room).emit('message', transmit);
+	}
 
 }
 
