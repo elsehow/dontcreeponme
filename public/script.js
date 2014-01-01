@@ -49,7 +49,7 @@ var pseudonym = '';
 var roomName = document.location.pathname.split('/')[1];
 
 socket.on('connect', function() {
- 	setPageTitle(roomname);
+	console.log("made contact with dontcreep server");
 });
 
 socket.on('newuserlist', function(msg) {
@@ -145,6 +145,8 @@ function setPseudo() {
 		socket.on('authresponse', function(data){
 			if(data.status == "ok")
 			{
+				// turn page title into chatroom name
+				setPageTitle(roomName);
 				// we are in, hide the modal interface
 				$('#modalPseudo').modal('hide');
 				$("#alertPseudo").hide();
@@ -175,7 +177,7 @@ function changeUsername() {
 
 
 function setPageTitle(string) {
-	document.title = string;
+	document.title = string + "— [don't creep on me]";
 }
 
 function time() {
