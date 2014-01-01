@@ -52,6 +52,7 @@ var pseudonym = '';
 
 var roomName = document.location.pathname.split('/')[1];
 
+
 socket.on('connect', function() {
 	console.log("made contact with dontcreep server");
 });
@@ -198,7 +199,7 @@ function updatePageTitle() {
 	if (!windowIsInFocus && unreadMessageCount > 0)	
 		title += '[' + unreadMessageCount + '] ';
 	
-	title += roomName + "— [don't creep on me]";
+	title += roomName + "— [dcom]";
 
 	document.title = title;
 }
