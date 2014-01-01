@@ -43,7 +43,7 @@ $(function() {
 });
 
 //Socket.io
-var socket = io.connect();
+var socket; // we don't connect yet
 
 var pseudonym = '';
 
@@ -161,6 +161,8 @@ function setPseudo() {
 		btn.button('Loading...');
 		btn.disabled = true;
 
+		//only now do we connect our socket
+		socket = io.connect();
 
 		socket.emit('joinattempt', roomName, $("#pseudoInput").val());
 
