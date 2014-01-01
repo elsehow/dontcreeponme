@@ -38,10 +38,11 @@ $(function() {
 	// setup interface for eliciting user's handle
 	showModalInterface();
 
-	// set up scrolling
-	$("#chatEntries").slimScroll({height: '600px', start:'bottom'});
+	// set up scrolling conversation window
+	chatsDivHeight = $( window ).height() - 80; // chat bar + padding = 80px in height
+	$("#chatEntries").slimScroll({height: chatsDivHeight + 'px', start:'bottom'});
 	submitButton.click(function() {sentMessage();});
-	$(".slimScrollDiv").height('603');
+	$(".slimScrollDiv").height(chatsDivHeight+3);
 	$(".slimScrollDiv").css('overflow', 'visible');
 });
 
