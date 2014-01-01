@@ -59,15 +59,16 @@ socket.on('newuserlist', function(msg) {
 
 socket.on('message', function(data) {
 
-	// don't show a message if it's from us
 	var from = data['pseudo'];
 
+	// special styling if it's an admin announcement (someone joining/leaving room fx)
 	if (from == '<Lord DCOM bot>')
 		addMessage(data['message'], from, new Date().toISOString(), false, true);
 
-	// don't show a message if it's from us
+	// don't show the message if it's from us
+	// we add the client's own messages on sentMessage() instead
 	else if (from !== pseudonym)
-		addMessage(data['message'], from, new Date().toISOString(), false, false);
+		addMessage(data['message'], from, new Date().toISOString(), true, false);
 	
 
 	// increment unread message count if window's not in focus
@@ -83,7 +84,7 @@ function sentMessage() {
 	{
 			socket.emit('message',messageContainer.val());
 //			socket.broadcast.to(roomName).emit('message', messageContainer.val());
-			addMessage(messageContainer.val(), "Me", new Date().toISOString(), true);
+			addMessage(messageContainer.val(), "Me", new Date().toISOString(), true, false);
 			messageContainer.val('');
 			submitButton.button('loading');
 		
@@ -101,7 +102,7 @@ function addMessage(msg, pseudo, date, self, admin) {
 	//check msg for links
 	msg = replaceURLWithHTMLLinks(msg);
 	if(self) var classDiv = "row message self";
-	if(admin) var classDiv = "row message admin";
+	else if(admin) var classDiv = "row message admin";
 	else var classDiv = "row message";
 	conversationContainer.append('<div class="'+classDiv+'"><div class="meta">'+pseudo+' <time class="date" title="'+date+'">'+date+'</time></div><p>' + msg + '</p></div>');
 	//force scrolling div toward bottom
