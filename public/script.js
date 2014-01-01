@@ -127,7 +127,7 @@ function bindEnterToPseudoSubmit() {
 		if(e.which == 13) {
 			$(this).blur();
 			// submit the message
-			$('.ladda-button').focus().click();
+			$('#pseudoSubmit').focus().click();
 		}
 	});
 }
@@ -148,7 +148,18 @@ function showModalInterface() {
 	$("#main").hide();
 	$("#alertPseudo").hide();
 	$('#modalPseudo').modal('show');
-	$(".ladda-button").click(function() {setPseudo()});
+	$("#pseudoSubmit").click(function() {
+		//when this button's clicked, we disable it for a while to allow processing time
+		var btn = $(this);
+		btn.disabled=true;
+		btn.button('Loading...');
+		setTimeout(function () {
+            btn.button('Retry')
+        }, 8000)
+		// we set user's pseudonym here
+		setPseudo();
+	});
+
 	$('#pseudoInput').focus().click();
 	bindEnterToPseudoSubmit();
 }
