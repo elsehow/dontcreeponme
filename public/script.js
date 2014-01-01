@@ -20,7 +20,7 @@ g.css(j);c.css(j);b.wrap(n);b.parent().append(c);b.parent().append(g);c.draggabl
 l||(a.returnValue=!1)}};(function(){window.addEventListener?(this.addEventListener("DOMMouseScroll",v,!1),this.addEventListener("mousewheel",v,!1)):document.attachEvent("onmousewheel",v)})();w();"bottom"==u?(c.css({top:b.outerHeight()-c.outerHeight()}),h(0,!0)):"object"==typeof u&&(h(d(u).position().top,null,!0),m||c.hide())}});return this}});jQuery.fn.extend({slimscroll:jQuery.fn.slimScroll})})(jQuery);
 
 
-var messageContainer, submitButton, chatContainer;
+var messageContainer, submitButton, conversationContainer;
 var windowIsInFocus = true; 
 var unreadMessageCount;
 
@@ -39,11 +39,7 @@ $(function() {
 	showModalInterface();
 
 	// set up scrolling conversation window
-	chatsDivHeight = $( window ).height() - 120; // the window height - the chat bar/bottom UI
-	$("#chatEntries").slimScroll({height: chatsDivHeight + 'px', start:'bottom'});
-	submitButton.click(function() {sentMessage();});
-	$(".slimScrollDiv").height(chatsDivHeight+3);
-	$(".slimScrollDiv").css('overflow', 'visible');
+	setChatWindowHeight();
 });
 
 //Socket.io
@@ -201,6 +197,14 @@ function changeUsername() {
 
 }
 
+function setChatWindowHeight() {
+	chatsDivHeight = $( window ).height() - 120; // the window height - the chat bar/bottom UI
+	conversationContainer.slimScroll({height: chatsDivHeight + 'px', start:'bottom'});
+	submitButton.click(function() {sentMessage();});
+	$(".slimScrollDiv").height(chatsDivHeight+3);
+	$(".slimScrollDiv").css('overflow', 'visible');
+}
+
 function updatePageTitle() {
 	var title = '';
 
@@ -262,3 +266,7 @@ var hidden = "hidden";
         }
     }
 }
+
+$( window ).resize(function() {
+	setChatWindowHeight();
+});
