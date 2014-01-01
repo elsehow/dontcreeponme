@@ -68,7 +68,7 @@ socket.on('message', function(data) {
 	// don't show the message if it's from us
 	// we add the client's own messages on sentMessage() instead
 	else if (from !== pseudonym)
-		addMessage(data['message'], from, new Date().toISOString(), true, false);
+		addMessage(data['message'], from, new Date().toISOString(), false, false);
 	
 
 	// increment unread message count if window's not in focus
