@@ -21,10 +21,14 @@ l||(a.returnValue=!1)}};(function(){window.addEventListener?(this.addEventListen
 
 
 var messageContainer, submitButton, chatContainer;
-
+var windowIsInFocus = true; 
+var unreadMessageCount;
 
 // Init
 $(function() {
+
+	windowFocusInit();
+
 	messageContainer = $('#messageInput');
 	submitButton = $("#submit");
 	conversationContainer = $("#chatEntries")
@@ -49,8 +53,7 @@ var pseudonym = '';
 var roomName = document.location.pathname.split('/')[1];
 
 socket.on('connect', function() {
-	// pseudonym = prompt("pick a pseudonym?");
- //  	socket.emit('joinattempt', roomName, pseudonym);
+	console.log("made contact with dontcreep server");
 });
 
 socket.on('newuserlist', function(msg) {
@@ -58,10 +61,16 @@ socket.on('newuserlist', function(msg) {
 });
 
 socket.on('message', function(data) {
+
 	// don't show a message if it's from us
 	var from = data['pseudo'];
-	if (from !== pseudonym) {
+	if (from !== pseudonym)
 		addMessage(data['message'], from, new Date().toISOString(), false);
+
+	// increment unread message count if window's not in focus
+	if (!windowIsInFocus) {
+		unreadMessageCount++;
+		updatePageTitle();
 	}
 });
 
@@ -146,6 +155,8 @@ function setPseudo() {
 		socket.on('authresponse', function(data){
 			if(data.status == "ok")
 			{
+				// turn page title into chatroom name
+				updatePageTitle();
 				// we are in, hide the modal interface
 				$('#modalPseudo').modal('hide');
 				$("#alertPseudo").hide();
@@ -174,6 +185,17 @@ function changeUsername() {
 
 }
 
+function updatePageTitle() {
+	var title = '';
+
+	if (!windowIsInFocus && unreadMessageCount > 0)	
+		title += '[' + unreadMessageCount + '] ';
+	
+	title += roomName + "— [don't creep on me]";
+
+	document.title = title;
+}
+
 function time() {
 	$("time").each(function(){
 		$(this).text($.timeago($(this).attr('title')));
@@ -183,4 +205,44 @@ function time() {
 function replaceURLWithHTMLLinks(text) {
     var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
     return text.replace(exp,"<a href='$1' target='_blank'>$1</a>"); 
+    return text.replace(exp,"<a href='$1'>$1</a>"); 
+}
+
+function windowFocusInit() {
+var hidden = "hidden";
+
+    // Standards:
+    if (hidden in document)
+        document.addEventListener("visibilitychange", onchange);
+    else if ((hidden = "mozHidden") in document)
+        document.addEventListener("mozvisibilitychange", onchange);
+    else if ((hidden = "webkitHidden") in document)
+        document.addEventListener("webkitvisibilitychange", onchange);
+    else if ((hidden = "msHidden") in document)
+        document.addEventListener("msvisibilitychange", onchange);
+    // IE 9 and lower:
+    else if ('onfocusin' in document)
+        document.onfocusin = document.onfocusout = onchange;
+    // All others:
+    else
+        window.onpageshow = window.onpagehide 
+            = window.onfocus = window.onblur = onchange;
+
+    function onchange (evt) {
+        var v = 'visible', h = 'hidden',
+            evtMap = { 
+                focus:v, focusin:v, pageshow:v, blur:h, focusout:h, pagehide:h 
+            };
+
+        evt = evt || window.event;
+
+        if (this[hidden]) {
+        	windowIsInFocus = false;
+        	unreadMessageCount = 0;
+        } else {
+        	windowIsInFocus = true;
+        	unreadMessageCount = 0;
+        	updatePageTitle();
+        }
+    }
 }
