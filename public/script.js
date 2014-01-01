@@ -54,7 +54,6 @@ var roomName = document.location.pathname.split('/')[1];
 
 
 socket.on('connect', function() {
-	console.log("made contact with dontcreep server");
 });
 
 socket.on('newuserlist', function(msg) {
@@ -122,7 +121,7 @@ function bindSendButton() {
 }
 
 function bindEnterToPseudoSubmit() {
-	// when the client hits ENTER on their keyboard
+	// when the client hits ENTER
 	$('#pseudoInput').keypress(function(e) {
 		if(e.which == 13) {
 			$(this).blur();
@@ -133,7 +132,7 @@ function bindEnterToPseudoSubmit() {
 }
 
 function bindEnterToSendMessage() {
-	// when the client hits ENTER on their keyboard
+	// when the client hits ENTER
 	$(messageContainer).keypress(function(e) {
 		if(e.which == 13) {
 			$(this).blur();
@@ -164,15 +163,15 @@ function setPseudo() {
 		btn.button('Loading...');
 		btn.disabled = true;
 
-		pseudonym = $("#pseudoInput").val();
 
 		socket.emit('joinattempt', roomName, $("#pseudoInput").val());
 
 		socket.on('authresponse', function(data){
 			if(data.status == "ok")
 			{
-				// turn page title into chatroom name
-				updatePageTitle();
+				//set our pseudo to the server-approved value
+				pseudonym = $("#pseudoInput").val();
+
 				// we are in, hide the modal interface
 				$('#modalPseudo').modal('hide');
 				$("#alertPseudo").hide();
@@ -182,7 +181,8 @@ function setPseudo() {
 				bindEnterToSendMessage();
 				// highlight the text entry field
 				$(messageContainer).focus().click();
-				
+				// turn page title into chatroom name
+				updatePageTitle();
 			}
 			else
 			{
@@ -196,7 +196,6 @@ function setPseudo() {
 
 function changeUsername() {
 
-	socket.emit('disconnect');
 	showModalInterface();
 
 }

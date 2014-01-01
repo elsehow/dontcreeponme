@@ -12,8 +12,8 @@ var underscore = require('underscore');
 
 // My stuff
 
-
 var appPort = 29420;
+var regex =  /[^A-Za-z0-9 ]/; // regular expression for validating usernames
 
 // Views Options
 
@@ -44,7 +44,6 @@ console.log('Server listening on port ' + appPort);
 // Handle the socket.io connections
 
 var global_users = 0; //count the global_users
-var regex =  /[^A-Za-z0-9 ]/; // regular expression for validating usernames
 
 io.sockets.on('connection', function(socket) { // First connection
 	global_users += 1; // Add 1 to the count
