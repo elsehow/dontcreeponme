@@ -3,10 +3,14 @@ html
 	head
 		title DCOM: Pick a pseudonym 
 		link(rel="stylesheet", href="../style.css")
+		link(rel="stylesheet", href="../ladda.min.css")
 		script(src='http://code.jquery.com/jquery-1.7.1.min.js')
 		script(src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js')
 		script(src="/socket.io/socket.io.js")
 		script(src="/script.js")
+		script(src='../ladda.min.js')
+		script(src='../spin.min.js')
+
 	body
 		div.container#main
 			div#chatEntries
@@ -35,4 +39,6 @@ html
 		div.modal-body
 			p 	You're about to enter an off-the-record chat. Only the people in the room with you at the same time will recieve your messages. Nothing will be stored permanently on our servers. You are not being tracked.
 		div.modal-footer
-			button.btn.btn-primary#pseudoSubmit Go chat
+			button.ladda-button(data-color="red", data-style="zoom-in") Join
+	script(type='text/javascript')
+		Ladda.bind( '.ladda-button', { timeout: 5000 } )

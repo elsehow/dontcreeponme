@@ -126,7 +126,7 @@ function bindEnterToPseudoSubmit() {
 		if(e.which == 13) {
 			$(this).blur();
 			// submit the message
-			$('#pseudoSubmit').focus().click();
+			$('.ladda-button').focus().click();
 		}
 	});
 }
@@ -147,7 +147,7 @@ function showModalInterface() {
 	$("#main").hide();
 	$("#alertPseudo").hide();
 	$('#modalPseudo').modal('show');
-	$("#pseudoSubmit").click(function() {setPseudo()});
+	$(".ladda-button").click(function() {setPseudo()});
 	$('#pseudoInput').focus().click();
 	bindEnterToPseudoSubmit();
 }
