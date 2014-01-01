@@ -699,13 +699,13 @@ html, body {
 	width:80%;
 	max-width:815px;
 	min-width:260px;
+	margin-top:20px;
 	overflow: scroll;
 } #entries {
-	height:4em;
+	height:70px;
 }
 #chatEntries {
 	overflow: scroll;
-	margin-top:20px;
 } 
 
 .message {

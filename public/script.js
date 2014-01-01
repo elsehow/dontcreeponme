@@ -212,7 +212,7 @@ function updatePageTitle() {
 	if (!windowIsInFocus && unreadMessageCount > 0)	
 		title += '[' + unreadMessageCount + '] ';
 	
-	title += roomName + "— [dcom]";
+	title += roomName + " — [dcom]";
 
 	document.title = title;
 }
