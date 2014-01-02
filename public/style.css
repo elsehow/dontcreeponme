@@ -694,7 +694,7 @@ a.thumbnail:hover{border-color:#0088cc;-webkit-box-shadow:0 1px 4px rgba(0, 105,
 html, body {
 	height:100%;
 }
-#main {
+#main, #explanation {
 	height: auto !important;
 	height: 100%;
 	width:80%;
@@ -703,6 +703,17 @@ html, body {
 	margin-top:20px;
 	overflow: scroll;
 } 
+
+#explanation {
+	height:26pt;
+	font-size:24pt;
+	text-align:center;
+	position:absolute;
+	min-height:100%;
+	top:35%;
+	margin-left:10%;
+	overflow:show;
+}
 
 #chatEntries {
 	overflow-y: scroll;

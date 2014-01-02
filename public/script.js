@@ -39,7 +39,9 @@ $(function() {
 	showModalInterface();
 
 	// set up scrolling conversation window
+	submitButton.click(function() {sentMessage();});
 	setChatWindowHeight();
+	$(".slimScrollDiv").css('overflow-y', 'scroll');
 });
 
 //Socket.io
@@ -106,11 +108,16 @@ function addMessage(msg, pseudo, date, self, admin) {
 	else var classDiv = "row message";
 	conversationContainer.append('<div class="'+classDiv+'"><div class="meta">'+pseudo+' <time class="date" title="'+date+'">'+date+'</time></div><p>' + msg + '</p></div>');
 
+	setConversationScroll();
+
+	time();
+}
+
+function setConversationScroll() {
 	// force scrolling div toward bottom
 	// unless the user has scrolled up in the window
 	if (conversationContainer.scrollTop() + $(window).height() > conversationContainer.prop('scrollHeight') - 100)
 		conversationContainer.scrollTop(conversationContainer.prop('scrollHeight'));
-	time();
 }
 
 function bindSendButton() {
@@ -146,6 +153,7 @@ function bindEnterToSendMessage() {
 
 function showModalInterface() {
 	$("#main").hide();
+	$("#explanation").show();
 	$("#alertPseudo").hide();
 	$('#modalPseudo').modal('show');
 	$("#pseudoSubmit").click(function() {
@@ -176,6 +184,7 @@ function setPseudo() {
 				// we are in, hide the modal interface
 				$('#modalPseudo').modal('hide');
 				$("#alertPseudo").hide();
+				$("#explanation").hide();
 				// show chat window
 				$("#main").show();
 				// bind enter to send
@@ -202,9 +211,7 @@ function changeUsername() {
 function setChatWindowHeight() {
 	chatsDivHeight = $( window ).height() - 120; // the window height - the chat bar/bottom UI
 	conversationContainer.slimScroll({height: chatsDivHeight, start:'bottom'});
-	submitButton.click(function() {sentMessage();});
-	$(".slimScrollDiv").height(chatsDivHeight+3);
-	$(".slimScrollDiv").css('overflow', 'scroll');
+	$(".slimScrollDiv").height(chatsDivHeight);
 }
 
 function updatePageTitle() {
@@ -213,7 +220,7 @@ function updatePageTitle() {
 	if (!windowIsInFocus && unreadMessageCount > 0)	
 		title += '[' + unreadMessageCount + '] ';
 	
-	title += roomName + " — [dcom]";
+	title += roomName + " — dcom";
 
 	document.title = title;
 }
