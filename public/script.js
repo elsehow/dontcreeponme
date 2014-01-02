@@ -105,8 +105,11 @@ function addMessage(msg, pseudo, date, self, admin) {
 	else if(admin) var classDiv = "row message admin";
 	else var classDiv = "row message";
 	conversationContainer.append('<div class="'+classDiv+'"><div class="meta">'+pseudo+' <time class="date" title="'+date+'">'+date+'</time></div><p>' + msg + '</p></div>');
-	//force scrolling div toward bottom
-	conversationContainer.prop({ scrollTop: conversationContainer.prop("scrollHeight") });
+
+	// force scrolling div toward bottom
+	// unless the user has scrolled up in the window
+	if (conversationContainer.scrollTop() + $(window).height() > conversationContainer.prop('scrollHeight') - 100)
+		conversationContainer.scrollTop(conversationContainer.prop('scrollHeight'));
 	time();
 }
 
@@ -198,10 +201,10 @@ function changeUsername() {
 
 function setChatWindowHeight() {
 	chatsDivHeight = $( window ).height() - 120; // the window height - the chat bar/bottom UI
-	conversationContainer.slimScroll({height: chatsDivHeight + 'px', start:'bottom'});
+	conversationContainer.slimScroll({height: chatsDivHeight, start:'bottom'});
 	submitButton.click(function() {sentMessage();});
 	$(".slimScrollDiv").height(chatsDivHeight+3);
-	$(".slimScrollDiv").css('overflow', 'visible');
+	$(".slimScrollDiv").css('overflow', 'scroll');
 }
 
 function updatePageTitle() {
