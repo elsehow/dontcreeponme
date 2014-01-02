@@ -106,6 +106,7 @@ function announceNewUser(room) {
 
 	//compile a list of all usernames in the room
 	var room_usernames = underscore.pluck( io.sockets.clients(room), 'username');
+	room_usernames = underscore.filter(room_usernames, function(u){ if (u) return u; });
 
 	//send this list to the clients in the room	
 	io.sockets.in(room).emit('newuserlist', {"userlist":room_usernames});
