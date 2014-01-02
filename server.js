@@ -53,22 +53,22 @@ io.sockets.on('connection', function(socket) { // First connection
 
 		// verify that they entered something
 		if (!pseudo || pseudo.length==0) {
-			socket.emit('authresponse', {'status':'Enter a username.'});
+			socket.emit('authresponse', {'status':'Enter a pseudonym.'});
 		}
 
 		// verify that the username is 3-140 char
 		else if (pseudo.length>140) {
-			socket.emit('authresponse', {'status':"Usernames have to be 1-140 characters. Sorry."});
+			socket.emit('authresponse', {'status':"Pseudonyms have to be 1-140 characters. Sorry."});
 		}
 
 		// verify that username doesn't contain any bad chars
 		else if (regex.test(pseudo)) {
-			socket.emit('authresponse', {'status':"For now usernames can only contain letters a-z and numbers. Sorry."});
+			socket.emit('authresponse', {'status':"For now pseudonyms can only contain letters a-z and numbers. Sorry."});
 		}
 
 		// check that username is unique in this room
 		else if(!isUsernameUnique(pseudo,roomName)) {
-			socket.emit('authresponse', {'status':"That username's already taken in this room."});
+			socket.emit('authresponse', {'status':"That pseudonym's already taken in this room."});
 		}
 
 		// if all's well, allow joining:
