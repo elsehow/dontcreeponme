@@ -84,7 +84,7 @@ function sentMessage() {
 	{
 			socket.emit('message',messageContainer.val());
 //			socket.broadcast.to(roomName).emit('message', messageContainer.val());
-			addMessage(messageContainer.val(), "Me", new Date().toISOString(), true, false);
+			addMessage(messageContainer.val(), pseudonym, new Date().toISOString(), true, false);
 			messageContainer.val('');
 			submitButton.button('loading');
 		
@@ -193,9 +193,7 @@ function setPseudo() {
 
 
 function changeUsername() {
-
 	showModalInterface();
-
 }
 
 function setChatWindowHeight() {
