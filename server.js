@@ -21,7 +21,6 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.set('view options', { layout: false });
 io.set('log level', 1); // reduce sockets debug logging
-io.set('close timeout', 15); // reduce sockets debug logging
 
 app.configure(function() {
 	app.use(express.static(__dirname + '/public'));
