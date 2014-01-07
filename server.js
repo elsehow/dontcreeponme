@@ -92,7 +92,7 @@ io.sockets.on('connection', function(socket) { // First connection
 	socket.on('message', function (data) { // Broadcast the message to all
 		var transmit = {date : new Date().toISOString(), pseudo : socket.username, message : data};
 		io.sockets.in(socket.room).emit('message', transmit);
-		console.log("user "+ transmit['pseudo'] +" said \""+data+"\" to " + socket.room);
+		console.log("user "+ transmit['pseudo'] +" spoke something in " + socket.room);
 	});
 
 	socket.on('disconnect', function () { // Disconnection of the client
