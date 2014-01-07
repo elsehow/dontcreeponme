@@ -54,12 +54,14 @@ io.sockets.on('connection', function(socket) { // First connection
 
 		// verify that they entered something
 		if (!pseudo || pseudo.length==0) {
-			socket.emit('authresponse', {'status':'Enter a pseudonym.'});
+			socket.emit('authresponse', 
+				{'status':'Enter a pseudonym.'});
 		}
 
 		// verify that the username is 3-140 char
 		else if (pseudo.length>140) {
-			socket.emit('authresponse', {'status':"Pseudonyms have to be 1-140 characters. Sorry."});
+			socket.emit('authresponse', 
+				{'status':"Pseudonyms have to be 1-140 characters. Sorry."});
 		}
 
 		// verify that username doesn't contain any bad chars
@@ -70,12 +72,13 @@ io.sockets.on('connection', function(socket) { // First connection
 
 		// check that username is unique in this room
 		else if(!isUsernameUnique(pseudo,roomName)) {
-			socket.emit('authresponse', {'status':"That pseudonym's already taken in this room."});
+			socket.emit('authresponse', 
+				{'status':"That pseudonym's already taken in this room."});
 		}
 
 		// if all's well, allow joining:
 		else {
-			console.log(roomName + ":" + pseudo);
+			console.log(pseudo + " joins " + roomName);
 			//store username in the session for this client
 			socket.username = pseudo;
 			//store chatroom in the session for this client
@@ -90,9 +93,21 @@ io.sockets.on('connection', function(socket) { // First connection
 	});
 
 	socket.on('message', function (data) { // Broadcast the message to all
+
+		//parse the message
 		var transmit = {date : new Date().toISOString(), pseudo : socket.username, message : data};
-		io.sockets.in(socket.room).emit('message', transmit);
-		console.log("user "+ transmit['pseudo'] +" spoke something in " + socket.room);
+
+		//before doing anything, make sure the user & room !== undefined
+		if (transmit['pseudo'] == undefined || socket.room == undefined) {
+			socket.leave(socket.room);
+			socket.emit('disconnect');
+		}
+
+		// if room and pseudo are defined ok, send the message
+		else {
+			io.sockets.in(socket.room).emit('message', transmit);
+			console.log("user "+ transmit['pseudo'] +" spoke something in " + socket.room);
+		}
 	});
 
 	socket.on('disconnect', function () { // Disconnection of the client
@@ -108,7 +123,7 @@ function announceNewUser(room) {
 
 	//compile a list of all usernames in the room
 	var room_usernames = underscore.pluck( io.sockets.clients(room), 'username');
-	room_usernames = underscore.filter(room_usernames, function(u){ if (u) return u; });
+	room_usernames = underscore.filter(room_usernames, function(u){ if (u && u.length>0) return u; });
 
 	//send this list to the clients in the room	
 	io.sockets.in(room).emit('newuserlist', {"userlist":room_usernames});

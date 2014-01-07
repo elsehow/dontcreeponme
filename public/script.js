@@ -80,6 +80,11 @@ socket.on('message', function(data) {
 	}
 });
 
+socket.on('disconnect', function() {
+	//when server disconnects us, show user the modal interface
+	showModalInterface();
+})
+
 //Help functions
 function sentMessage() {
 	if (messageContainer.val() != "") 
