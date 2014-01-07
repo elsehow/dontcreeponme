@@ -21,6 +21,7 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.set('view options', { layout: false });
 io.set('log level', 1); // reduce sockets debug logging
+io.set('transports', ['xhr-polling']); // this fixes a bug where users 502 on connect
 
 app.configure(function() {
 	app.use(express.static(__dirname + '/public'));
@@ -45,12 +46,6 @@ console.log('Server listening on port ' + appPort);
 
 var global_users = 0; //count the global_users
 
-// this fixes a bug where users 502 on connect
-// unclear why this works or why the error occurred
-io.configure('development', function(){
-  io.set('transports', ['xhr-polling']);
-});
-
 io.sockets.on('connection', function(socket) { // First connection
 	
 	global_users += 1; // Add 1 to the count
@@ -64,8 +59,7 @@ io.sockets.on('connection', function(socket) { // First connection
 
 		// verify that the username is 3-140 char
 		else if (pseudo.length>140) {
-			socket.emit('authresponse', 
-				{'status':"Pseudonyms have to be 1-140 characters. Sorry."});
+			socket.emit('authresponse', {'status':"Pseudonyms have to be 1-140 characters. Sorry."});
 		}
 
 		// verify that username doesn't contain any bad chars
@@ -76,8 +70,7 @@ io.sockets.on('connection', function(socket) { // First connection
 
 		// check that username is unique in this room
 		else if(!isUsernameUnique(pseudo,roomName)) {
-			socket.emit('authresponse', 
-				{'status':"That pseudonym's already taken in this room."});
+			socket.emit('authresponse', {'status':"That pseudonym's already taken in this room."});
 		}
 
 		// if all's well, allow joining:
