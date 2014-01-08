@@ -109,7 +109,9 @@ function refreshUserlist(usernames) {
 function addMessage(msg, pseudo, date, self, admin) {
 	//check msg for links
 	msg = replaceURLWithHTMLLinks(msg);
-	if (pullLinks) { msg = pullImagesFromLinks(msg); }
+	// each of these functions turns at most 1 image or video
+	// so, users get at most 1 video and 1 image (gif,jpeg and so on)
+	if (pullLinks) { msg = pullImagesFromLinks(msg); msg = pullVideosFromLinks(msg); }
 	if(self) var classDiv = "row message self";
 	else if(admin) var classDiv = "row message admin";
 	else var classDiv = "row message";
@@ -258,6 +260,13 @@ function pullImagesFromLinks(text) {
 	return text;
 }
 
+function pullVideosFromLinks(text) {
+	var videoid = text.match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/);
+	if(videoid != null) 
+		return text + '<iframe title="YouTube video player" class="youtube-player" type="text/html" width="640" height="390" src="http://www.youtube.com/embed/' + videoid[1] + '"frameborder="0" allowFullScreen></iframe>';
+	
+	return text;
+}
 
 function windowFocusInit() {
 var hidden = "hidden";
