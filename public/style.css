@@ -727,7 +727,7 @@ html, body {
 	background: #fff; /* Old browsers */
 	margin-left: 0;
 	width:auto;
-	min-width:260px;
+	min-width:290px;
     -webkit-animation-name: fadeInRight; 
     -webkit-animation-duration: 300ms;
     float:left;

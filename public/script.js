@@ -255,7 +255,7 @@ function pullImagesFromLinks(text) {
 	var matches = text.match(exp);
 	if (matches) {
 		var pulled_URL = matches[0];
-		return text + '<img src="' + pulled_URL + '"">';
+		return text + '<p><img src="' + pulled_URL + '"">';
 	}
 	return text;
 }
@@ -263,7 +263,7 @@ function pullImagesFromLinks(text) {
 function pullVideosFromLinks(text) {
 	var videoid = text.match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/);
 	if(videoid != null) 
-		return text + '<iframe title="YouTube video player" class="youtube-player" type="text/html" width="640" height="390" src="http://www.youtube.com/embed/' + videoid[1] + '"frameborder="0" allowFullScreen></iframe>';
+		return text + '<p><iframe title="YouTube video player" class="youtube-player" type="text/html" width="480" height="360" src="http://www.youtube.com/embed/' + videoid[1] + '"frameborder="0" allowFullScreen></iframe>';
 	
 	return text;
 }
