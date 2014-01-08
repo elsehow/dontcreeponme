@@ -108,6 +108,7 @@ function refreshUserlist(usernames) {
 function addMessage(msg, pseudo, date, self, admin) {
 	//check msg for links
 	msg = replaceURLWithHTMLLinks(msg);
+	if (pull_links) { msg = replaceLinksWithContent(msg); }
 	if(self) var classDiv = "row message self";
 	else if(admin) var classDiv = "row message admin";
 	else var classDiv = "row message";
@@ -116,6 +117,13 @@ function addMessage(msg, pseudo, date, self, admin) {
 	setConversationScroll();
 
 	time();
+}
+
+
+// links come in here tagged with <a> </a> .. 
+// 
+function replaceLinksWithContent(message) {
+	console.log(msg);
 }
 
 
