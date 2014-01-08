@@ -22,6 +22,7 @@ l||(a.returnValue=!1)}};(function(){window.addEventListener?(this.addEventListen
 
 var messageContainer, submitButton, conversationContainer;
 var windowIsInFocus = true; 
+var pullLinks = true;
 var unreadMessageCount;
 
 // Init
@@ -108,7 +109,7 @@ function refreshUserlist(usernames) {
 function addMessage(msg, pseudo, date, self, admin) {
 	//check msg for links
 	msg = replaceURLWithHTMLLinks(msg);
-	if (pull_links) { msg = replaceLinksWithContent(msg); }
+	if (pullLinks) { msg = pullImagesFromLinks(msg); }
 	if(self) var classDiv = "row message self";
 	else if(admin) var classDiv = "row message admin";
 	else var classDiv = "row message";
@@ -119,12 +120,6 @@ function addMessage(msg, pseudo, date, self, admin) {
 	time();
 }
 
-
-// links come in here tagged with <a> </a> .. 
-// 
-function replaceLinksWithContent(message) {
-	console.log(msg);
-}
 
 
 function bindSendButton() {
@@ -224,8 +219,8 @@ function setChatWindowHeight() {
 
 function setConversationScroll() {
 	// force scrolling div toward bottom
-	// unless the user has scrolled up in the window
-	if (conversationContainer.scrollTop() + $(window).height() > conversationContainer.prop('scrollHeight') - 200)
+	// unless the user has scrolled up more than 2/3 of the window
+	if (conversationContainer.scrollTop() + $(window).height() > conversationContainer.prop('scrollHeight') - $(window).height()*2/3)
 		conversationContainer.scrollTop(conversationContainer.prop('scrollHeight'));
 }
 
@@ -249,8 +244,20 @@ function time() {
 function replaceURLWithHTMLLinks(text) {
     var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
     return text.replace(exp,"<a href='$1' target='_blank'>$1</a>"); 
-    return text.replace(exp,"<a href='$1'>$1</a>"); 
 }
+
+// links come in here tagged with <a> </a> .. 
+// we find the image links and embed them in img tags
+function pullImagesFromLinks(text) {
+	var exp = /(http|https):\/\/(www\.)?[\w-_\.]+\.[a-zA-Z]+\/((([\w-_\/]+)\/)?[\w-_\.]+\.(png|gif|jpg))/gi;
+	var matches = text.match(exp);
+	if (matches) {
+		var pulled_URL = matches[0];
+		return text + '<img src="' + pulled_URL + '"">';
+	}
+	return text;
+}
+
 
 function windowFocusInit() {
 var hidden = "hidden";
