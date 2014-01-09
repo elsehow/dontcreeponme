@@ -239,9 +239,33 @@ function updatePageTitle() {
 
 function time() {
 	$("time").each(function(){
-		$(this).text($.timeago($(this).attr('title')));
+
+		var time = $.timeago($(this).attr('title'));
+	
+		// if timeago < 2 min
+		if (!is_expired(time))
+			$(this).text($.timeago($(this).attr('title'), 60));
+		// if older than 2 mins,
+		else {
+			//remove the message
+			$(this).parent().parent().remove();
+			//readjust scroll
+			setConversationScroll();
+			// if browser's not in focus, decrement unreadMessageCount
+			if (!windowIsInFocus) unreadMessageCount--;
+		}
+
 	});
 }
+
+function is_expired(date_str) {
+
+    if (date_str === 'about a minute ago') {
+    	return true; 
+    }
+
+    return false;
+};
 
 function replaceURLWithHTMLLinks(text) {
     var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
