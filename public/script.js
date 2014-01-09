@@ -251,8 +251,7 @@ function time() {
 			$(this).parent().parent().remove();
 			//readjust scroll
 			setConversationScroll();
-			// if browser's not in focus, decrement unreadMessageCount
-			if (!windowIsInFocus) unreadMessageCount--;
+
 		}
 
 	});
