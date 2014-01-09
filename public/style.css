@@ -699,7 +699,7 @@ html, body {
 	height: 100%;
 	width:80%;
 	max-width:614px;
-	min-width:260px;
+	min-width:380px;
 	overflow-y: hidden;
 } 
 
@@ -719,6 +719,7 @@ html, body {
 	clear: both;
 	float: left;
 	max-width:520px;
+	min-width:380px;
 	word-wrap:break-word;
 	overflow: hidden;
 	padding: 6px 12px;
@@ -727,13 +728,30 @@ html, body {
 	background: #fff; /* Old browsers */
 	margin-left: 0;
 	width:auto;
-	min-width:290px;
     -webkit-animation-name: fadeInRight; 
     -webkit-animation-duration: 300ms;
     float:left;
 } .message:first-child {
 	margin-top:23%;
 } 
+
+
+.msgcolor {
+	margin-top:2px;
+	float:left;
+	clear:both;
+	display:block;
+	height:30px;	
+	width:15px;
+	background-color:#0d8;
+	z-index:9;
+	margin-right:25px;
+}
+
+.self .msgcolor {
+	float: right;	
+	margin-right:0;
+}
 
 .meta {
 	font-size:75%;

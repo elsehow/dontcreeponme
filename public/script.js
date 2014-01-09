@@ -115,7 +115,7 @@ function addMessage(msg, pseudo, date, self, admin) {
 	if(self) var classDiv = "row message self";
 	else if(admin) var classDiv = "row message admin";
 	else var classDiv = "row message";
-	conversationContainer.append('<div class="'+classDiv+'"><div class="meta">'+pseudo+' <time class="date" title="'+date+'">'+date+'</time></div><p>' + msg + '</p></div>');
+	conversationContainer.append('<div class="'+classDiv+'"><div class = "msgcolor"></div><div class="meta">'+pseudo+' <time class="date" title="'+date+'">'+date+'</time></div><p>' + msg + '</p></div>');
 
 	setConversationScroll();
 
