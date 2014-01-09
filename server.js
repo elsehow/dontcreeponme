@@ -88,6 +88,7 @@ io.sockets.on('connection', function(socket) { // First connection
 			// tell user that they've been accepted
 			socket.emit('authresponse', {'status':'ok'});
 			//tell room to reload users now that a new person's joined 
+			// room, username, is_join event
 			announceNewUser(socket.room, socket.username, true);
 		}
 	});

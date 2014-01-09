@@ -25,6 +25,9 @@ var windowIsInFocus = true;
 var pullLinks = true;
 var unreadMessageCount;
 
+//debug
+var my_color;
+
 // Init
 $(function() {
 
@@ -38,11 +41,23 @@ $(function() {
 
 	// setup interface for eliciting user's handle
 	showModalInterface();
+	$("#colorpicker").spectrum({
+		showPaletteOnly: true,
+	    showPalette:true, 
+	    clickoutFiresChange: true,
+	    color: 'fa8',
+    	palette: [
+	        ['black', 'white', 'fa8',
+	        'rgb(255, 128, 0);', 'hsv 100 70 50'],
+	        ['red', 'yellow', 'green', 'blue', 'violet']
+    	]
+	});
 
 	// set up scrolling conversation window
 	submitButton.click(function() {sentMessage();});
 	setChatWindowHeight();
 	$(".slimScrollDiv").css('overflow-y', 'scroll');
+
 });
 
 //Socket.io
@@ -107,15 +122,25 @@ function refreshUserlist(usernames) {
 }
 
 function addMessage(msg, pseudo, date, self, admin) {
+
 	//check msg for links
 	msg = replaceURLWithHTMLLinks(msg);
+
 	// each of these functions turns at most 1 image or video
 	// so, users get at most 1 video and 1 image (gif,jpeg and so on)
 	if (pullLinks) { msg = pullImagesFromLinks(msg); msg = pullVideosFromLinks(msg); }
+
+	// sort the css right
 	if(self) var classDiv = "row message self";
 	else if(admin) var classDiv = "row message admin";
 	else var classDiv = "row message";
-	conversationContainer.append('<div class="'+classDiv+'"><div class = "msgcolor"></div><div class="meta">'+pseudo+' <time class="date" title="'+date+'">'+date+'</time></div><p>' + msg + '</p></div>');
+
+	if (self) var tagColor = my_color;
+	else tagColor = "#899";
+
+	var string = '<div class="'+classDiv+'"><div class = "msgcolor" background-color="' + tagColor + '"></div><div class="meta">'+pseudo+' <time class="date" title="'+date+'">'+date+'</time></div><p>' + msg + '</p></div>';
+
+	conversationContainer.append(string);
 
 	setConversationScroll();
 
@@ -178,6 +203,7 @@ function setPseudo() {
 
 
 		socket.emit('joinattempt', roomName, $("#pseudoInput").val());
+		my_color = $('#colorpicker').spectrum('get');
 
 		socket.on('authresponse', function(data){
 			if(data.status == "ok")

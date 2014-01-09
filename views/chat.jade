@@ -3,11 +3,12 @@ html
 	head
 		title DCOM: Pick a pseudonym 
 		link(rel="stylesheet", href="../style.css")
-		link(rel="stylesheet", href="../ladda.min.css")
+		link(rel="stylesheet", href="../spectrum.css")
 		script(src='http://code.jquery.com/jquery-1.7.1.min.js')
 		script(src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js')
 		script(src="/socket.io/socket.io.js")
 		script(src="/script.js")
+		script(src="/spectrum.js")
 
 	body
 		div#explanation
@@ -32,7 +33,9 @@ html
 			h3 Choose a pseudonym?
 		div.modal-body
 			p Go ahead:
-			input(type='text')#pseudoInput
+			form
+				input(type='text')#pseudoInput
+				input(id='colorpicker')
 			div.alert.alert-error#alertPseudo
 				| 
 		div.modal-body

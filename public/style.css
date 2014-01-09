@@ -743,9 +743,9 @@ html, body {
 	display:block;
 	height:30px;	
 	width:15px;
-	background-color:#0d8;
 	z-index:9;
 	margin-right:25px;
+	background-color:#faa;
 }
 
 .self .msgcolor {
@@ -805,3 +805,8 @@ html, body {
 	padding-left:25px;
 	padding-bottom: 10px;
 }
+
+#pseudoInput {
+	float:none;
+}
+
