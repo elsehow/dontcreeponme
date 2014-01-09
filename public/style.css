@@ -745,7 +745,6 @@ html, body {
 	width:15px;
 	z-index:9;
 	margin-right:25px;
-	background-color:#faa;
 }
 
 .self .msgcolor {
@@ -778,6 +777,11 @@ html, body {
 	float: right;
 	background: #f0f0f0; /* Old browsers */
 	color: black;
+}
+
+#userlistDiv .span {
+	float:left;
+	text-align:left;
 }
 
 .admin {

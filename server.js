@@ -8,7 +8,7 @@ var server = http.createServer(app);
 var io = require('socket.io').listen(server);
 
 var jade = require('jade');
-var underscore = require('underscore');
+var _ = require('underscore');
 
 // My stuff
 
@@ -50,7 +50,7 @@ io.sockets.on('connection', function(socket) { // First connection
 	
 	global_users += 1; // Add 1 to the count
 	
-	socket.on('joinattempt', function(roomName, pseudo) {
+	socket.on('joinattempt', function(roomName, pseudo, color) {
 
 		// verify that they entered something
 		if (!pseudo || pseudo.length==0) {
@@ -79,6 +79,8 @@ io.sockets.on('connection', function(socket) { // First connection
 		// if all's well, allow joining:
 		else {
 			console.log(pseudo + " joins " + roomName);
+			//store color in the session for this client
+			socket.color = color;
 			//store username in the session for this client
 			socket.username = pseudo;
 			//store chatroom in the session for this client
@@ -122,12 +124,12 @@ io.sockets.on('connection', function(socket) { // First connection
 // announce new user's name over chat too
 function announceNewUser(room) { 
 
-	//compile a list of all usernames in the room
-	var room_usernames = underscore.pluck( io.sockets.clients(room), 'username');
-	room_usernames = underscore.filter(room_usernames, function(u){ if (u && u.length>0) return u; });
+	var userlist = _.map(io.sockets.clients(room), function(o,v) {
+		return[o.username,o.color];
+	});
 
 	//send this list to the clients in the room	
-	io.sockets.in(room).emit('newuserlist', {"userlist":room_usernames});
+	io.sockets.in(room).emit('newuserlist', {"userlist":userlist});
 
 	//send a message to all users announcing the join
 	if (arguments[1]) {
@@ -136,6 +138,7 @@ function announceNewUser(room) {
 		var isConnectEvent = arguments[2];
 
 		var msg = username;
+
 		if (isConnectEvent) {
 			msg += " enters the room.";
 		} else {

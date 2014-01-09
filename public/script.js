@@ -19,7 +19,6 @@ overflow:"hidden",width:j,height:z});b.css({overflow:"hidden",width:j,height:z})
 g.css(j);c.css(j);b.wrap(n);b.parent().append(c);b.parent().append(g);c.draggable({axis:"y",containment:"parent",start:function(){s=!0},stop:function(){s=!1;i()},drag:function(){h(0,d(this).position().top,!1)}});g.hover(function(){p()},function(){i()});c.hover(function(){r=!0},function(){r=!1});b.hover(function(){t=!0;p();i()},function(){t=!1;i()});var v=function(a){if(t){var a=a||window.event,b=0;a.wheelDelta&&(b=-a.wheelDelta/120);a.detail&&(b=a.detail/3);h(b,!0);a.preventDefault&&!l&&a.preventDefault();
 l||(a.returnValue=!1)}};(function(){window.addEventListener?(this.addEventListener("DOMMouseScroll",v,!1),this.addEventListener("mousewheel",v,!1)):document.attachEvent("onmousewheel",v)})();w();"bottom"==u?(c.css({top:b.outerHeight()-c.outerHeight()}),h(0,!0)):"object"==typeof u&&(h(d(u).position().top,null,!0),m||c.hide())}});return this}});jQuery.fn.extend({slimscroll:jQuery.fn.slimScroll})})(jQuery);
 
-
 var messageContainer, submitButton, conversationContainer;
 var windowIsInFocus = true; 
 var pullLinks = true;
@@ -42,14 +41,15 @@ $(function() {
 	// setup interface for eliciting user's handle
 	showModalInterface();
 	$("#colorpicker").spectrum({
+		preferredFormat: "hex",
 		showPaletteOnly: true,
 	    showPalette:true, 
 	    clickoutFiresChange: true,
 	    color: 'fa8',
     	palette: [
-	        ['black', 'white', 'fa8',
-	        'rgb(255, 128, 0);', 'hsv 100 70 50'],
-	        ['red', 'yellow', 'green', 'blue', 'violet']
+	        ['fa8', '1e2', '34e',
+	        '011;', '000', '312'],
+	        ['a03', '456', '981', '900', '849']
     	]
 	});
 
@@ -114,11 +114,22 @@ function sentMessage() {
 	}
 }
 
-function refreshUserlist(usernames) {
-	if (usernames.length < 2)
-		$('#userlistDiv').html("You're the only one here.");
-	else 
-		$('#userlistDiv').html('There are ' + usernames.length + ' people here: ' + usernames.join(', '));
+function refreshUserlist(usersobject) {
+	var count = 0;
+	var userlistDiv = $('#userlistDiv');
+
+	userlistDiv.text('People here: ');
+
+	$.each(usersobject,function(i,v) { // object is array of username,color
+		//make sure username isn't null
+		if (v[0]) {
+			count++;
+			var test = $('<span>' + v[0] + ' </span>').css('color','#'+v[1]);
+			userlistDiv.append(test);
+		}
+	});
+
+
 }
 
 function addMessage(msg, pseudo, date, self, admin) {
@@ -130,17 +141,16 @@ function addMessage(msg, pseudo, date, self, admin) {
 	// so, users get at most 1 video and 1 image (gif,jpeg and so on)
 	if (pullLinks) { msg = pullImagesFromLinks(msg); msg = pullVideosFromLinks(msg); }
 
-	// sort the css right
+	// create the message div 
 	if(self) var classDiv = "row message self";
 	else if(admin) var classDiv = "row message admin";
 	else var classDiv = "row message";
+	var div = $('<div class="'+classDiv+'"><div class = "msgcolor"></div><div class="meta">'+pseudo+' <time class="date" title="'+date+'">'+date+'</time></div><p>' + msg + '</p></div>');
 
-	if (self) var tagColor = my_color;
-	else tagColor = "#899";
+	// set the tag color according to user color
+	if (self) div.find(".msgcolor").css('background-color',my_color);
 
-	var string = '<div class="'+classDiv+'"><div class = "msgcolor" background-color="' + tagColor + '"></div><div class="meta">'+pseudo+' <time class="date" title="'+date+'">'+date+'</time></div><p>' + msg + '</p></div>';
-
-	conversationContainer.append(string);
+	conversationContainer.append(div);
 
 	setConversationScroll();
 
@@ -185,6 +195,7 @@ function showModalInterface() {
 	$("#explanation").show();
 	$("#alertPseudo").hide();
 	$('#modalPseudo').modal('show');
+	$("#pseudoSubmit").text('Join');
 	$("#pseudoSubmit").click(function() {
 		// we set user's pseudonym here
 		setPseudo();
@@ -197,19 +208,22 @@ function showModalInterface() {
 function setPseudo() {
 	if ($("#pseudoInput").val() != "")
 	{
+		// immediately give the user feedback, say we're loading
 		var btn = $('#pseudoSubmit');
-		btn.button('Loading...');
+		btn.text('Loading...');
 		btn.disabled = true;
 
-
-		socket.emit('joinattempt', roomName, $("#pseudoInput").val());
+		// get the user's selected color & username
 		my_color = $('#colorpicker').spectrum('get');
+		var proposed_username = $("#pseudoInput").val();
 
+		socket.emit('joinattempt', roomName, proposed_username, my_color.toHex());
+		
 		socket.on('authresponse', function(data){
 			if(data.status == "ok")
 			{
 				//set our pseudo to the server-approved value
-				pseudonym = $("#pseudoInput").val();
+				pseudonym = proposed_username;
 
 				// we are in, hide the modal interface
 				$('#modalPseudo').modal('hide');
