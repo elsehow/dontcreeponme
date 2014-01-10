@@ -44,7 +44,7 @@ $(function() {
 		showPaletteOnly: true,
 	    showPalette:true, 
 	    clickoutFiresChange: true,
-	    color: 'fa8',
+	    color: '456',
     	palette: [
 	        ['fa8', '1e2', '34e',
 	        '011;', '000', '312'],
