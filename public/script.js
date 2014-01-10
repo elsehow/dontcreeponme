@@ -318,7 +318,7 @@ function time() {
 
 function is_expired(date_str) {
 
-    if (date_str === 'five minutes ago') {
+    if (date_str === '5 minutes ago') {
     	return true; 
     }
 
