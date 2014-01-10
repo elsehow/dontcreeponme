@@ -38,6 +38,7 @@ $(function() {
 	window.setInterval(time, 1000*10);
 
 	// setup interface for eliciting user's handle
+	clearScreen();
 	showModalInterface();
 	$("#colorpicker").spectrum({
 		preferredFormat: "hex",
@@ -103,6 +104,7 @@ socket.on('message', function(data) {
 socket.on('disconnect', function() {
 	//when server disconnects us, show user the modal interface
 	showModalInterface();
+	clearScreen();
 })
 
 //Help functions
