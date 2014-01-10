@@ -121,9 +121,6 @@ function refreshUserlist(usersobject) { //we need to keep usersobject as current
 
 	userlistDiv.text('People here: ');
 
-	// for (var key in current_userlist) {
-	// 	var obj = current_userlist[key];
-	// 	console.log(obj.username + ','+ obj.color)	
 
 	$.each(current_userlist,function(username,color)  {
 
@@ -155,31 +152,7 @@ function addMessage(msg, pseudo, date, self, admin) {
 
 	// set the tag color according to user color
 	if (self) div.find(".msgcolor").css('background-color',my_color);
-
-
-
-
-
-
-
-
-
-
-	// right here, practice a lookup of color given username
-
-	// $.each(current_userlist,function(n)  {console.log(n)} );
-
-
-
-
-
-
-
-
-
-
-
-
+	else div.find(".msgcolor").css('background-color','#'+current_userlist[pseudo]);
 
 	conversationContainer.append(div);
 
