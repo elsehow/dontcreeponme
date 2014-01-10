@@ -23,9 +23,8 @@ var messageContainer, submitButton, conversationContainer;
 var windowIsInFocus = true; 
 var pullLinks = true;
 var unreadMessageCount;
-
-//debug
 var my_color;
+var current_userlist; //this is an object of [username,color]
 
 // Init
 $(function() {
@@ -114,19 +113,26 @@ function sentMessage() {
 	}
 }
 
-function refreshUserlist(usersobject) {
+function refreshUserlist(usersobject) { //we need to keep usersobject as current_userlist
+	current_userlist = usersobject;
+
 	var count = 0;
 	var userlistDiv = $('#userlistDiv');
 
 	userlistDiv.text('People here: ');
 
-	$.each(usersobject,function(i,v) { // object is array of username,color
-		//make sure username isn't null
-		if (v[0]) {
+	// for (var key in current_userlist) {
+	// 	var obj = current_userlist[key];
+	// 	console.log(obj.username + ','+ obj.color)	
+
+	$.each(current_userlist,function(username,color)  {
+
+		if (username) {
 			count++;
-			var test = $('<span>' + v[0] + ' </span>').css('color','#'+v[1]);
-			userlistDiv.append(test);
+			var user_text = $('<span>' + username + ' </span>').css('color','#'+color);
+			userlistDiv.append(user_text);
 		}
+
 	});
 
 
@@ -149,6 +155,31 @@ function addMessage(msg, pseudo, date, self, admin) {
 
 	// set the tag color according to user color
 	if (self) div.find(".msgcolor").css('background-color',my_color);
+
+
+
+
+
+
+
+
+
+
+	// right here, practice a lookup of color given username
+
+	// $.each(current_userlist,function(n)  {console.log(n)} );
+
+
+
+
+
+
+
+
+
+
+
+
 
 	conversationContainer.append(div);
 

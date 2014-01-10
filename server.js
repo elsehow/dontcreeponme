@@ -124,9 +124,9 @@ io.sockets.on('connection', function(socket) { // First connection
 // announce new user's name over chat too
 function announceNewUser(room) { 
 
-	var userlist = _.map(io.sockets.clients(room), function(o,v) {
+	var userlist = _.object(_.map(io.sockets.clients(room), function(o,v) {
 		return[o.username,o.color];
-	});
+	}));
 
 	//send this list to the clients in the room	
 	io.sockets.in(room).emit('newuserlist', {"userlist":userlist});
