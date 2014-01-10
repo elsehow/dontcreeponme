@@ -104,7 +104,6 @@ socket.on('message', function(data) {
 socket.on('disconnect', function() {
 	//when server disconnects us, show user the modal interface
 	showModalInterface();
-	clearScreen();
 })
 
 //Help functions
@@ -210,6 +209,7 @@ function bindEnterToSendMessage() {
 }
 
 function showModalInterface() {
+	clearScreen();
 	$("#main").hide();
 	$("#explanation").show();
 	$("#alertPseudo").hide();
