@@ -724,25 +724,25 @@ html, body {
 	min-width:380px;
 	word-wrap:break-word;
 	overflow: hidden;
-	padding: 6px 12px;
+	padding: 6px 12px 6px 0;
 	margin: 1px 0;
 	margin-left: 0;
 	width:auto;
     -webkit-animation-name: fadeInRight; 
     -webkit-animation-duration: 100ms;
     float:left;
-
-    background-image:url('bg-dark.gif');
-	background-repeat:repeat;
 	color:#fff;
+	background-image:url('bg-dark.gif');
+	background-repeat:repeat;
+	/*background-color:#223;*/
 } .message:first-child {
 	margin-top:23%;
 } 
 
 
 .msgcolor {
-	margin:-6px 0 6px 0;
-	padding: 0 0 0 0;
+	margin:-6px 0 0 0;
+	padding: 0; 
 	float:left;
 	clear:both;
 	display:block;
@@ -754,11 +754,12 @@ html, body {
 
 .self .msgcolor {
 	float: right;	
-	margin-right:-6px;
+	margin-right:0;
 }
 
 
 .self {
+	padding:6px 0 6px 12px;
     -webkit-animation-name: fadeInRight; 
     -webkit-animation-duration: 300ms;
 	float: right;

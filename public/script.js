@@ -44,11 +44,16 @@ $(function() {
 		showPaletteOnly: true,
 	    showPalette:true, 
 	    clickoutFiresChange: true,
-	    color: '456',
+	    color: 'FFE637',
     	palette: [
-	        ['fa8', '1e2', '34e',
-	        '011;', '000', '312'],
-	        ['a03', '456', '981', '900', '849']
+    		['125E7F', '24BCFF', '092F40'],
+    		['06017F', '030040', '0D01FF'],
+    		['48047F', '240240', '9009FF'],
+    		['7F0008', '400004', 'FF0010'],
+    		['402A0A', 'FD2CFF', 'FFE637'],
+    		['A6FF00', '00F0FF', '00FF10'],
+    		['B9C5FF', 'CBFFA0', 'CC836C'],
+    		['5EB289', 'B9FFDD', '6107B2']
     	]
 	});
 
@@ -135,6 +140,9 @@ function refreshUserlist(usersobject) { //we need to keep usersobject as current
 
 }
 
+
+
+
 function addMessage(msg, pseudo, date, self, admin) {
 
 	//check msg for links
@@ -159,6 +167,11 @@ function addMessage(msg, pseudo, date, self, admin) {
 	setConversationScroll();
 
 	time();
+}
+
+
+function clearScreen() {
+	conversationContainer.empty();	
 }
 
 
@@ -266,7 +279,7 @@ function setChatWindowHeight() {
 function setConversationScroll() {
 	// force scrolling div toward bottom
 	// unless the user has scrolled up more than 2/3 of the window
-	if (conversationContainer.scrollTop() + $(window).height() > conversationContainer.prop('scrollHeight') - $(window).height()*2/3)
+	if (conversationContainer.scrollTop() + $(window).height() > conversationContainer.prop('scrollHeight') - $(window).height());
 		conversationContainer.scrollTop(conversationContainer.prop('scrollHeight'));
 }
 

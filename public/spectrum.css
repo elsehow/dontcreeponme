@@ -244,7 +244,6 @@ See http://bgrins.github.io/spectrum/themes/ for instructions.
 .sp-container {
     border-radius: 0;
     background-color: #ECECEC;
-    border: solid 1px #f0c49B;
     padding: 0;
 }
 .sp-container, .sp-container button, .sp-container input, .sp-color, .sp-hue, .sp-clear
@@ -356,19 +355,21 @@ See http://bgrins.github.io/spectrum/themes/ for instructions.
 /* Replacer (the little preview div that shows up instead of the <input>) */
 .sp-replacer {
     margin:0;
+    margin-left:10px;
+    margin-top:-7px;
     overflow:hidden;
     cursor:pointer;
     padding: 4px;
     display:inline-block;
     *zoom: 1;
     *display: inline;
-    border: solid 1px #91765d;
-    background: #eee;
+    border: solid 1px #ccc;
+    background: #fff;
     color: #333;
     vertical-align: middle;
 }
 .sp-replacer:hover, .sp-replacer.sp-active {
-    border-color: #F0C49B;
+    border-color: #0000FF;
     color: #111;
 }
 .sp-replacer.sp-disabled {
@@ -415,7 +416,7 @@ See http://bgrins.github.io/spectrum/themes/ for instructions.
 
 /* Buttons: http://hellohappy.org/css3-buttons/ */
 .sp-container button {
-  background-color: #eeeeee;
+  background-color: #ffff;
   background-image: -webkit-linear-gradient(top, #eeeeee, #cccccc);
   background-image: -moz-linear-gradient(top, #eeeeee, #cccccc);
   background-image: -ms-linear-gradient(top, #eeeeee, #cccccc);
