@@ -821,6 +821,7 @@ html, body, .message {
 	min-width:175px;
 }
 #userlistDiv {
+	color:#c8ccce;
 	float:left;
 }
 #entries {

@@ -125,6 +125,9 @@ function refreshUserlist(usersobject) { //we need to keep usersobject as current
 	var count = 0;
 	var userlistDiv = $('#userlistDiv');
 
+	userlistDiv.text('here: ');
+
+
 	$.each(current_userlist,function(username,color)  {
 
 		if (username) {
