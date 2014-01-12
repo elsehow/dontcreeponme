@@ -694,6 +694,16 @@ a.thumbnail:hover{border-color:#0088cc;-webkit-box-shadow:0 1px 4px rgba(0, 105,
 html, body {
 	height:100%;
 }
+
+html, body, .message {
+	background-color:#747974;
+}
+
+#chatEntries {
+	color:#f1f1f1;
+	background-color:#D2D6D6;
+}
+
 #main, #explanation {
 	height: auto !important;
 	height: 100%;
@@ -720,36 +730,37 @@ html, body {
 	box-sizing: border-box;
 	clear: both;
 	float: left;
+	display:block;
 	max-width:520px;
 	min-width:380px;
 	word-wrap:break-word;
-	overflow: hidden;
-	padding: 6px 12px 6px 0;
-	margin: 1px 0;
+	overflow: visible;
+	margin: 0px 0;
 	margin-left: 0;
 	width:auto;
     -webkit-animation-name: fadeInRight; 
-    -webkit-animation-duration: 100ms;
+    -webkit-animation-duration: 50ms;
     float:left;
-	color:#fff;
-	background-image:url('bg-dark.gif');
-	background-repeat:repeat;
-	/*background-color:#223;*/
 } .message:first-child {
 	margin-top:23%;
 } 
+.message p {
+	padding:0 12px;
+	display:block;
+}
+
+
 
 
 .msgcolor {
-	margin:-6px 0 0 0;
-	padding: 0; 
+	margin:0;
+	height:45px;
 	float:left;
 	clear:both;
 	display:block;
-	height:40px;
 	width:15px;
 	z-index:9;
-	margin-right:25px;
+	margin-right:12px;
 }
 
 .self .msgcolor {
@@ -759,18 +770,15 @@ html, body {
 
 
 .self {
-	padding:6px 0 6px 12px;
     -webkit-animation-name: fadeInRight; 
     -webkit-animation-duration: 300ms;
 	float: right;
-	background-image:url('bg-light.gif');
-	background-repeat:repeat;
-	color: black;
 }
 
 .meta {
+	padding:6px 12px 0 12px;
 	font-size:75%;
-	color:#888;
+	color:#C8CCCE;
 } .meta .self {
 	padding-left:10px;
 }

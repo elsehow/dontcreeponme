@@ -125,9 +125,6 @@ function refreshUserlist(usersobject) { //we need to keep usersobject as current
 	var count = 0;
 	var userlistDiv = $('#userlistDiv');
 
-	userlistDiv.text('People here: ');
-
-
 	$.each(current_userlist,function(username,color)  {
 
 		if (username) {
@@ -318,7 +315,7 @@ function time() {
 
 function is_expired(date_str) {
 
-    if (date_str === '5 minutes ago') {
+    if (date_str === '6 minutes ago') {
     	return true; 
     }
 
