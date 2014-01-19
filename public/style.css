@@ -693,6 +693,7 @@ a.thumbnail:hover{border-color:#0088cc;-webkit-box-shadow:0 1px 4px rgba(0, 105,
 }
 html, body {
 	height:100%;
+	overflow:hidden;
 }
 
 html, body, .message {
@@ -702,6 +703,7 @@ html, body, .message {
 #chatEntries {
 	color:#f1f1f1;
 	background-color:#D2D6D6;
+	overflow-y:hidden;
 }
 
 #main, #explanation {
@@ -712,6 +714,7 @@ html, body, .message {
 	min-width:380px;
 	overflow-y: hidden;
 } 
+
 
 #explanation {
 	height:26pt;
@@ -749,7 +752,7 @@ html, body, .message {
 	display:block;
 }
 .message a {
-	color:#e3e;
+	color:#e3a;
 }
 
 
@@ -808,8 +811,8 @@ html, body, .message {
 
 .admin {
 	padding-top:20px;
-} .admin meta {
-	visibility:hidden;
+} .admin .meta {
+	display:none;
 }
 .btn-group {	
     float: right;
