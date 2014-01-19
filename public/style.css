@@ -727,6 +727,7 @@ html, body, .message {
 
 
 .message {
+	margin:12px 0;
 	box-sizing: border-box;
 	clear: both;
 	float: left;
@@ -735,7 +736,6 @@ html, body, .message {
 	min-width:380px;
 	word-wrap:break-word;
 	overflow: visible;
-	margin: 0px 0;
 	margin-left: 0;
 	width:auto;
     -webkit-animation-name: fadeInRight; 
@@ -747,6 +747,9 @@ html, body, .message {
 .message p {
 	padding:0 12px;
 	display:block;
+}
+.message a {
+	color:#e3e;
 }
 
 

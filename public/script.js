@@ -25,6 +25,7 @@ var pullLinks = true;
 var unreadMessageCount;
 var my_color;
 var current_userlist; //this is an object of [username,color]
+var last_pseudo = '';
 
 // Init
 $(function() {
@@ -153,17 +154,31 @@ function addMessage(msg, pseudo, date, self, admin) {
 	// so, users get at most 1 video and 1 image (gif,jpeg and so on)
 	if (pullLinks) { msg = pullImagesFromLinks(msg); msg = pullVideosFromLinks(msg); }
 
-	// create the message div 
-	if(self) var classDiv = "row message self";
-	else if(admin) var classDiv = "row message admin";
-	else var classDiv = "row message";
-	var div = $('<div class="'+classDiv+'"><div class = "msgcolor"></div><div class="meta">'+pseudo+' <time class="date" title="'+date+'">'+date+'</time></div><p>' + msg + '</p></div>');
+	// if this is from the same person that sent the last message,
+	// add to the last div
+	if (pseudo === last_pseudo) {
+		// get the last div
+		var last_msg = $( "#chatEntries .message").last();
+		last_msg.append("<p>" + msg + "</p>");
+	}
 
-	// set the tag color according to user color
-	if (self) div.find(".msgcolor").css('background-color',my_color);
-	else div.find(".msgcolor").css('background-color','#'+current_userlist[pseudo]);
+	// if not, add a new message to the div
+	else {
+		
+		// create the message div 
+		if(self) var classDiv = "row message self";
+		else if(admin) var classDiv = "row message admin";
+		else var classDiv = "row message";
+		var div = $('<div class="'+classDiv+'"><div class = "msgcolor"></div><div class="meta">'+pseudo+' <time class="date" title="'+date+'">'+date+'</time></div><p>' + msg + '</p></div>');
 
-	conversationContainer.append(div);
+		// set the tag color according to user color
+		if (self) div.find(".msgcolor").css('background-color',my_color);
+		else div.find(".msgcolor").css('background-color','#'+current_userlist[pseudo]);
+
+		conversationContainer.append(div);
+	}
+
+	last_pseudo = pseudo;
 
 	setConversationScroll();
 
