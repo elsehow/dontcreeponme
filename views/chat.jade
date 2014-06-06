@@ -1,10 +1,14 @@
 doctype html
 html
 	head
-		title DCOM: Pick a pseudonym 
-		link(rel="stylesheet", href="../style.css")
+		meta(name="viewport", content="width=device-width, initial-scale=1, maximum-scale=1")
+		title Pick a pseudonym 
+		link(rel="stylesheet", href="base.css")
+		link(rel="stylesheet", href="skeleton.css")
+		link(rel="stylesheet", href="layout.css")
 		link(rel="stylesheet", href="../spectrum.css")
 		script(src='http://code.jquery.com/jquery-1.7.1.min.js')
+		script(src='http://timeago.yarp.com/jquery.timeago.js')
 		script(src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js')
 		script(src="/socket.io/socket.io.js")
 		script(src="/script.js")
@@ -14,34 +18,39 @@ html
 		div#explanation
 			a(href="", onclick="showModalInterface()") pick a username.
 		div.container#main
-			div#chatEntries
-			div.row#entries
-				input(type='textarea')#messageInput
-				div.btn-group
-					button.btn#submit(data-loading-text="Send") Send
-					button.btn.dropdown-toggle(data-toggle="dropdown")
-						span.caret
-					ul.dropdown-menu
-						li
-							a#edit(onclick="changeUsername()")
-								i.icon-user
-								| Change name
-							a#edit(onclick="clearScreen()")
-								i.eye-closed
-								| Clear screen 
-				div#userlistDiv
-					| 
+			div#chatEntries(class=['sixteen','columns'])
+			div(class=['sixteen','columns'])
+				div.row
+					div(class=['fourteen','columns','alpha'])
+						input(type='textarea')#messageInput
+					div(class=['two','columns','omega'])
+						div.btn-group
+							button.btn#submit(data-loading-text="Send") Send
+							//button.btn.dropdown-toggle(data-toggle="dropdown")
+							//	span.caret
+							//ul.dropdown-menu
+							//	li
+							//		a#edit(onclick="changeUsername()")
+							//			i.icon-user
+							//			| Change name
+							//		a#edit(onclick="clearScreen()")
+							//			i.eye-closed
+							//			| Clear screen 
+					div#userlistDiv
+						| 
+
 	div.modal.fade#modalPseudo
-		div.modal-header
-			h3 Choose a pseudonym?
-		div.modal-body
-			p Go ahead:
-			form
-				input(type='text')#pseudoInput
-				input(id='colorpicker')
-			div.alert.alert-error#alertPseudo
-				| 
-		div.modal-body
-			p 	You're about to enter an off-the-record chat. Only the people in the room with you at the same time will recieve your messages. Nothing will be stored permanently on our servers. You are not being tracked.
-		div.modal-footer
-			button.btn#pseudoSubmit Join
+		div.container(class=['sixteen','columns'])
+			div.modal-header
+				h3 Choose a pseudonym?
+			div.modal-body
+				p Go ahead:
+				form
+					input(type='text')#pseudoInput
+					input(id='colorpicker')
+				div.alert.alert-error#alertPseudo
+					| 
+			div.modal-body
+				p 	You're about to enter an off-the-record chat. Only the people in the room with you at the same time will recieve your messages. Nothing will be stored permanently on our servers. You are not being tracked.
+			div.modal-footer
+				button.btn#pseudoSubmit Join
