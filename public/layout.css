@@ -23,9 +23,32 @@ html, body, .message {
 }
 
 
+input, button {
+	display: block;
+	margin: 0.3em 0 0 0;
+	padding: 0.5em 0 0.5em 0.7em;
+	width: calc(100% - 2em);
+	border: none;
+	background: #D2D6D6;
+	color: rgba(1,1,1,0.8);
+	font-size: 1em;
+	line-height: 1;
+	opacity: 0.9;
+	-webkit-transition: opacity 0.3s;
+	transition: opacity 0.3s;
+}
+
+button {
+	padding:0.5em 0;
+}
+
 
 /* #Page Styles
 ================================================== */
+
+#modalPseudo {
+	padding-top:40px;
+}
 
 .admin {
 	padding-top:20px;

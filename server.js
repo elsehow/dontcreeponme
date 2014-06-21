@@ -20,12 +20,9 @@ var regex =  /[^A-Za-z0-9]/; // regular expression for validating usernames
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.set('view options', { layout: false });
-io.set('log level', 1); // reduce sockets debug logging
 io.set('transports', ['xhr-polling']); // this fixes a bug where users 502 on connect
+app.use(express.static(__dirname + '/public'));
 
-app.configure(function() {
-	app.use(express.static(__dirname + '/public'));
-});
 
 // Render and send the main page
 app.get('/', function(req, res){

@@ -10,47 +10,47 @@ html
 		script(src='http://code.jquery.com/jquery-1.7.1.min.js')
 		script(src='http://timeago.yarp.com/jquery.timeago.js')
 		script(src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js')
+		script(src="/drop.js")
+		script(src="/colorpicker.js")
 		script(src="/socket.io/socket.io.js")
 		script(src="/script.js")
 		script(src="/spectrum.js")
 
 	body
-		div#explanation
-			a(href="", onclick="showModalInterface()") pick a username.
-		div.container#main
-			div#chatEntries(class=['sixteen','columns'])
-			div(class=['sixteen','columns'])
-				div.row
-					div(class=['fourteen','columns','alpha'])
-						input(type='textarea')#messageInput
-					div(class=['two','columns','omega'])
-						div.btn-group
-							button.btn#submit(data-loading-text="Send") Send
-							//button.btn.dropdown-toggle(data-toggle="dropdown")
-							//	span.caret
-							//ul.dropdown-menu
-							//	li
-							//		a#edit(onclick="changeUsername()")
-							//			i.icon-user
-							//			| Change name
-							//		a#edit(onclick="clearScreen()")
-							//			i.eye-closed
-							//			| Clear screen 
-					div#userlistDiv
+		div.container.fade#modalPseudo
+			.six.columns
+				.row
+					h3 Choose a pseudonym?
+				.row
+					.four.columns.alpha
+						input(type='text')#pseudoInput
+					.two.columns.omega
+						input(id='colorpicker')
+					div.alert.alert-error#alertPseudo
 						| 
+				.row
+					p 	You're about to enter an off-the-record chat. Only the people in the room with you at the same time will recieve your messages. Nothing will be stored permanently on our servers. You are not being tracked.
+				.row
+					button.btn#pseudoSubmit Join
+		div.container#main
+			.sixteen.columns.alpha#chatEntries
+			.row
+				.fourteen.columns.alpha
+					input(type='textarea')#messageInput
+				.two.columns.omega
+					div.btn-group
+						button#submit(data-loading-text="Send") Send
+			.row
+				.fourteen.columns.alpha#userlistDiv |
+				.columns.columns.omega
+					ul
+						li
+							a#edit(onclick="changeUsername()")
+								i.icon-user
+								| Change name
+						li
+							
+							a#edit(onclick="clearScreen()")
+								i.eye-closed
+									| Clear screen 
 
-	div.modal.fade#modalPseudo
-		div.container(class=['sixteen','columns'])
-			div.modal-header
-				h3 Choose a pseudonym?
-			div.modal-body
-				p Go ahead:
-				form
-					input(type='text')#pseudoInput
-					input(id='colorpicker')
-				div.alert.alert-error#alertPseudo
-					| 
-			div.modal-body
-				p 	You're about to enter an off-the-record chat. Only the people in the room with you at the same time will recieve your messages. Nothing will be stored permanently on our servers. You are not being tracked.
-			div.modal-footer
-				button.btn#pseudoSubmit Join
