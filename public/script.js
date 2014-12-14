@@ -23,7 +23,7 @@ var pullLinks = true;
 var unreadMessageCount;
 var my_color;
 var current_userlist; //this is an object of [username,color]
-var last_pseudo = '';
+var last_pseudo = ''; var last_date;
 
 // Init
 $(function() {
@@ -157,8 +157,9 @@ function addMessage(msg, pseudo, date, self, admin) {
 	if (pullLinks) { msg = pullImagesFromLinks(msg); msg = pullVideosFromLinks(msg); }
 
 	// if this is from the same person that sent the last message,
+	// and the messages came close together
 	// add to the last div
-	if (pseudo === last_pseudo) {
+	if ((pseudo === last_pseudo) && (new Date(date) - new Date(last_date) < 10000)) {
 		// get the last div
 		var last_msg = $( "#chatEntries .message").last();
 		last_msg.append("<p>" + msg + "</p>");
@@ -181,6 +182,7 @@ function addMessage(msg, pseudo, date, self, admin) {
 	}
 
 	last_pseudo = pseudo;
+	last_date = date;
 
 	setConversationScroll();
 
