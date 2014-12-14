@@ -3,54 +3,57 @@ html
 	head
 		meta(name="viewport", content="width=device-width, initial-scale=1, maximum-scale=1")
 		title Pick a pseudonym 
-		link(rel="stylesheet", href="base.css")
-		link(rel="stylesheet", href="skeleton.css")
 		link(rel="stylesheet", href="layout.css")
-		link(rel="stylesheet", href="../spectrum.css")
-		script(src='http://code.jquery.com/jquery-1.7.1.min.js')
-		script(src='http://timeago.yarp.com/jquery.timeago.js')
-		script(src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js')
+		link(rel="stylesheet", href="spectrum.css")
+		link(rel="stylesheet", href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css")
+		script(src='//code.jquery.com/jquery-1.9.1.min.js')
+		script(src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js")
+		script(src='//timeago.yarp.com/jquery.timeago.js')
+		script(src='//ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js')
 		script(src="/drop.js")
-		script(src="/colorpicker.js")
+		script(src="/spectrum.js")
 		script(src="/socket.io/socket.io.js")
 		script(src="/script.js")
-		script(src="/spectrum.js")
 
 	body
-		div.container.fade#modalPseudo
-			.six.columns
+
+		div.modal-dialog#pickUsername
+			.modal-title
+				h3 Choose a pseudonym?
+			.modal-body
 				.row
-					h3 Choose a pseudonym?
-				.row
-					.four.columns.alpha
+					.col-md-12.col-lg-10.col-sm-10.col-xs-10
 						input(type='text')#pseudoInput
-					.two.columns.omega
+					.col-md-2.col-lg-2.col-sm-2.col-xs-2
 						input(id='colorpicker')
+				.row
 					div.alert.alert-error#alertPseudo
 						| 
 				.row
 					p 	You're about to enter an off-the-record chat. Only the people in the room with you at the same time will recieve your messages. Nothing will be stored permanently on our servers. You are not being tracked.
-				.row
-					button.btn#pseudoSubmit Join
-		div.container#main
-			.sixteen.columns.alpha#chatEntries
-			.row
-				.fourteen.columns.alpha
-					input(type='textarea')#messageInput
-				.two.columns.omega
-					div.btn-group
-						button#submit(data-loading-text="Send") Send
-			.row
-				.fourteen.columns.alpha#userlistDiv |
-				.columns.columns.omega
-					ul
-						li
-							a#edit(onclick="changeUsername()")
-								i.icon-user
-								| Change name
-						li
-							
-							a#edit(onclick="clearScreen()")
-								i.eye-closed
-									| Clear screen 
+				button.btn#pseudoSubmit Join
 
+
+		div.container#main
+			.row
+				.col-md-12.col-lg-12.col-xs-12.col-sm-12.nopadding
+					#chatEntries
+			.row
+				.col-md-11.col-lg-11.col-sm-11.col-xs-11.nopadding
+					input(type='textarea')#messageInput
+				.col-md-1.col-lg-1.col-sm-1.col-xs-1.nopadding
+					button#submit(data-loading-text="Send") Send
+			.row
+				.col-md-12.col-lg-12.col-sm-12.col-xs-12.nopadding
+					.pull-left#userlistDiv |
+					.pull-right		
+						ul
+							li
+								a#edit(onclick="changeUsername()")
+									| Change name
+							li
+								
+								a#edit(onclick="clearScreen()")
+									| Clear screen 
+		
+		

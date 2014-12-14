@@ -211,10 +211,10 @@ function bindEnterToSendMessage() {
 }
 
 function showModalInterface() {
-	clearScreen();
+	//clearScreen();
 	$("#main").hide();
 	$("#alertPseudo").hide();
-	$('#modalPseudo').show();
+	$('#pickUsername').modal('show');
 	$("#pseudoSubmit").text('Join');
 	$("#pseudoSubmit").click(function() {
 		// we set user's pseudonym here
@@ -396,7 +396,7 @@ function enterChatroom(proposed_username) {
 	pseudonym = proposed_username;
 
 	// we are in, hide the modal interface
-	$('#modalPseudo').hide();
+	$('#pickUsername').modal('hide');
 	$("#alertPseudo").hide();
 	// show chat window
 	$("#main").show();
