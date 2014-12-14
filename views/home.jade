@@ -2,14 +2,20 @@ doctypehtml
 html
 	head
 		title Chat
-		link(rel="stylesheet", href="style.css")
+		meta(name="viewport", content="width=device-width, initial-scale=1, maximum-scale=1")
+		link(rel="stylesheet", href="base.css")
+		link(rel="stylesheet", href="skeleton.css")
+		link(rel="stylesheet", href="layout.css")
 		script(src='http://code.jquery.com/jquery-1.7.1.min.js')
 		script(src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js')
 		script(src="/socket.io/socket.io.js")
 	body
 		div.container#main
-			img(src='/dont-creep-flag.png', width='100%')
+			img(src='/dont-creep-flag.png', height='50%', width='50%')
 			p 	
-			p	DCOM is a simple, multimedia-enabled chat that does not track you in any way. Messages are never stored on our servers - they're transmitted only to people who are in the chatroom at the time you sent your message.
-			p 	The idea is to build a chat app that's about as ephemeral as real-life conversation.
-			p 	go to dontcreepon.me/[anythinghere] to make a new chatroom. share that URL with whomever you'd like to chat with. (this runs on websockets and node, in case you're interseted. source coming soon.)
+			p	DCOM is a simple, multimedia-enabled chat that does not track you in any way. Messages are never stored on our servers - they're transmitted only to people who are in the chatroom at the time you sent your message. The idea is to build a chat app that's about as ephemeral as real-life conversation.
+			p 	Go to dontcreepon.me/[anythinghere] to make a new chatroom. Share that URL with whomever you'd like to chat with.
+			p 
+				| This project is open source and all code is 
+				a(href='http://github.com/csmpls/dontcreeponme') right here
+				| , do consider contributing if you'd like to see this software move forward.
