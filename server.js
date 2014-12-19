@@ -4,8 +4,8 @@ var express = require('express');
 var app = express();
 
 var http = require('http');
-var server = http.createServer(app);
-var io = require('socket.io').listen(server);
+var httpServer = http.createServer(app);
+var io = require('socket.io').listen(httpServer);
 
 var jade = require('jade');
 var _ = require('underscore');
@@ -36,7 +36,7 @@ app.get('/:id', function(req, res) {
 	res.render('chat.jade');
 });
 
-server.listen(appPort);
+httpServer.listen(appPort);
 console.log('Server listening on port ' + appPort);
 
 // Handle the socket.io connections
