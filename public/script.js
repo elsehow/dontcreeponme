@@ -24,7 +24,7 @@ $(function() {
 	})
 
 	// setup interface for eliciting user's handle
-	clearScreen();
+	conversationContainer.empty();	
 	showModalInterface();
 	var colorpalette =  [
     		['06017F', '030040', '0D01FF'],
@@ -50,7 +50,6 @@ $(function() {
 
 	// set up scrolling conversation window
 	submitButton.click(function() {sentMessage();});
-	setChatWindowHeight();
 });
 
 //Socket.io
@@ -138,7 +137,7 @@ function addMessage(msg, pseudo, date, self, admin) {
 
 	// each of these functions turns at most 1 image or video
 	// so, users get at most 1 video and 1 image (gif,jpeg and so on)
-	if (pullLinks) { msg = pullImagesFromLinks(msg); msg = pullVideosFromLinks(msg); }
+	if (pullLinks) { msg = pullImagesFromLinks(msg); } //msg = pullVideosFromLinks(msg); }
 
 	// if this is from the same person that sent the last message,
 	// and the messages came close together
@@ -213,7 +212,6 @@ function bindEnterToSendMessage() {
 }
 
 function showModalInterface() {
-	//clearScreen();
 	$("#main").hide();
 	$("#alertPseudo").hide();
 	$('#pickUsername').modal('show');
@@ -261,11 +259,9 @@ function changeUsername() {
 	showModalInterface();
 }
 
-function setChatWindowHeight() {
-}
 
 function setConversationScroll() {
-	 $('html, body').animate({scrollTop: $(document).height()}, 'slow');
+	window.scrollTo(0,document.body.scrollHeight);
 }
 
 function updatePageTitle() {
@@ -281,21 +277,8 @@ function updatePageTitle() {
 
 function time() {
 	$("time").each(function(){
-
 		var time = $.timeago($(this).attr('title'));
-	
-		// if timeago < 4 min
-		// if (!is_expired(time))
-			$(this).text($.timeago($(this).attr('title'), 60));
-		// // if older than 4 mins,
-		// else {
-		// 	//remove the message
-		// 	$(this).parent().parent().remove();
-		// 	//readjust scroll
-		// 	setConversationScroll();
-
-		// }
-
+		$(this).text($.timeago($(this).attr('title'), 60));
 	});
 }
 
@@ -320,18 +303,20 @@ function pullImagesFromLinks(text) {
 	var matches = text.match(exp);
 	if (matches) {
 		var pulled_URL = matches[0];
-		return text + '<p><img src="' + pulled_URL + '"">';
+		//return text + '<p><img src="' + pulled_URL + '"">';
+		return '<p><img src="' + pulled_URL + '"">'; // just the embed, no url
 	}
 	return text;
 }
 
-function pullVideosFromLinks(text) {
-	var videoid = text.match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/);
-	if(videoid != null) 
-		return text + '<p><iframe title="YouTube video player" class="youtube-player" type="text/html" width="480" height="360" src="http://www.youtube.com/embed/' + videoid[1] + '"frameborder="0" allowFullScreen></iframe>';
-	
-	return text;
-}
+//function pullVideosFromLinks(text) {
+//	var videoid = text.match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/);
+//	if(videoid != null) 
+//		//return text + '<p><iframe title="YouTube video player" class="youtube-player" type="text/html" width="480" height="360" src="https://www.youtube.com/embed/' + videoid[1] + '"frameborder="0" allowFullScreen></iframe>';
+//		return '<p><iframe width="480" height="360" src="//www.youtube.com/embed/' + videoid[1] + '"frameborder="0" allowFullScreen></iframe>';
+//	
+//	return text;
+//}
 
 function windowFocusInit() {
 var hidden = "hidden";
@@ -373,7 +358,6 @@ var hidden = "hidden";
 }
 
 $( window ).resize(function() {
-	setChatWindowHeight();
 });
 
 function setupSettingsMenu() {

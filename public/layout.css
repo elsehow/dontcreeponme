@@ -13,6 +13,10 @@ html, body, .message {
 	background-color:#747974 !important;
 }
 
+img {
+  max-width:95%;
+}
+
 
 input, button {
 	display: block;
