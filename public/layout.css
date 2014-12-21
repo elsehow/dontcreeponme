@@ -17,20 +17,17 @@ img {
   max-width:95%;
 }
 
-
 input, button {
 	display: block;
 	margin: 0.3em 0 0 0;
 	padding: 0.5em 0 0.5em 0.7em;
-	width: calc(100% - 2em);
+	width: calc(100%);
 	border: none;
 	background: #D2D6D6;
+	outline:none;
 	color: rgba(1,1,1,0.8);
 	font-size: 1em;
-	line-height: 1;
 	opacity: 0.9;
-	-webkit-transition: opacity 0.3s;
-	transition: opacity 0.3s;
 }
 
 .modal-backdrop {
@@ -40,15 +37,24 @@ input, button {
   background-color:#ccc;
 }
 
-#pickUsername {
-  background:#ccc;
-  padding:0 20px;
+.modalText {
+  padding:20px 5px;
+  color:#f1f1f1;
 }
 
-.nopadding {
+#pickUsername {
+  background:#ccc;
+  padding:20px 40px;
+  width:45%;
+  margin:40px auto;
+  min-width:300px;
+}
+
+.nopaddingLeft {
   padding-left:0px !important;
+}
+.nopaddingRight {
   padding-right:0px !important;
-  padding-bottom:10px;
 }
 
 button {
@@ -72,7 +78,7 @@ button {
 
 #chatEntries {
 	color:#f1f1f1;
-	background-color:#D2D6D6;
+	/*background-color:#D2D6D6;*/
 	overflow:hidden;
 }
 
@@ -99,23 +105,17 @@ button {
 	display:block;
 }
 
-.self p {
-	padding:0 0 0 12px;
-	display:block;
-}
-
 .message a {
 	color:#e3a;
 }
 .msgcolor {
-	margin:0 0 0 12px;
-	height:45px;
+	margin:0 12px 0 12px;
+	height:40px;
 	float:left;
 	clear:both;
 	display:block;
-	width:15px;
+	width:9px;
 	z-index:9;
-	margin-right:12px;
 }
 
 .self .msgcolor {
@@ -125,11 +125,20 @@ button {
 .self {
     -webkit-animation-name: fadeInRight; 
     -webkit-animation-duration: 300ms;
-	float: right;
+    float: right;
+    text-align:right;
 }
+
+.self p {
+	padding:0 15px 0 12px;
+	display:block;
+}
+
 
 #messageInput, #submit {
 	width:100%;
+} #messageInput {
+
 }
 
 
@@ -142,10 +151,11 @@ button {
 }
 
 .date{
+        color:#A6A6A6;
 	visibility: hidden;
 	font-style: italic;
-	display:block;
-	float:right;
+	display:inline;
+        padding: 0 10px;
 }
 
 .message:hover .date {
@@ -155,16 +165,20 @@ button {
     -webkit-animation-duration: 250ms;
 }
 
+.message:hover .date .self {
+        -webkit-animation-name: fadeInLeft;
+    -webkit-animation-duration: 250ms;
+}
 
 #userlistDiv .span {
 	float:left;
 	text-align:left;
 }
 
-
 #userlistDiv {
 	color:#c8ccce;
 	float:left;
+        padding: 10px 0;
 }
 
 ul {

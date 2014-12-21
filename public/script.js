@@ -113,7 +113,7 @@ function refreshUserlist(usersobject) { //we need to keep usersobject as current
 	var count = 0;
 	var userlistDiv = $('#userlistDiv');
 
-	userlistDiv.text('here: ');
+	//userlistDiv.text('here: ');
 
 
 	$.each(current_userlist,function(username,color)  {
@@ -142,7 +142,7 @@ function addMessage(msg, pseudo, date, self, admin) {
 	// if this is from the same person that sent the last message,
 	// and the messages came close together
 	// add to the last div
-	if ((pseudo === last_pseudo) && (new Date(date) - new Date(last_date) < 10000)) {
+	if ((pseudo === last_pseudo) && (new Date(date) - new Date(last_date) < 50000)) {
 		// get the last div
 		var last_msg = $( "#chatEntries .message").last();
 		last_msg.append("<p>" + msg + "</p>");
@@ -155,7 +155,13 @@ function addMessage(msg, pseudo, date, self, admin) {
 		if(self) var classDiv = "row message self";
 		else if(admin) var classDiv = "row message admin";
 		else var classDiv = "row message";
-		var div = $('<div class="'+classDiv+'"><div class = "msgcolor"></div><div class="meta">'+pseudo+' <time class="date" title="'+date+'">'+date+'</time></div><p>' + msg + '</p></div>');
+
+		if(self) {
+			var div = $('<div class="'+classDiv+'"><div class = "msgcolor"></div><div class="meta"><time class="date" title="'+date+'">'+date+'</time>'+pseudo+'</div><p>' + msg + '</p></div>');
+
+		} else {
+			var div = $('<div class="'+classDiv+'"><div class = "msgcolor"></div><div class="meta">'+pseudo+' <time class="date" title="'+date+'">'+date+'</time></div><p>' + msg + '</p></div>');
+		}
 		if (!admin) {
 			// set the tag color according to user color
 			if (self) div.find(".msgcolor").css('background-color',my_color);
@@ -214,7 +220,7 @@ function bindEnterToSendMessage() {
 function showModalInterface() {
 	$("#main").hide();
 	$("#alertPseudo").hide();
-	$('#pickUsername').modal('show');
+	$('#pickUsername').show();
 	$("#pseudoSubmit").text('Join');
 	$("#pseudoSubmit").click(function() {
 		// we set user's pseudonym here
@@ -382,7 +388,7 @@ function enterChatroom(proposed_username) {
 	pseudonym = proposed_username;
 
 	// we are in, hide the modal interface
-	$('#pickUsername').modal('hide');
+	$('#pickUsername').hide();
 	$("#alertPseudo").hide();
 	// show chat window
 	$("#main").show();
