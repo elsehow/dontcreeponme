@@ -13,6 +13,7 @@ html
 		script(src="/drop.js")
 		script(src="/spectrum.js")
 		script(src="/socket.io/socket.io.js")
+		script(src="/sjcl.js")
 		script(src="/script.js")
 
 	body
@@ -28,6 +29,11 @@ html
 				div.alert.alert-error#alertPseudo
 					| 
 				p 	You're about to enter an off-the-record chat. Only the people in the room with you at the same time will recieve your messages. Nothing will be stored permanently on our servers. You are not being tracked.
+			.row
+				.col-md-10.col-lg-10.col-sm-10.col-xs-10
+					input(type='text')#password
+				p	password (optional)
+					
 			button.btn#pseudoSubmit Join
 
 

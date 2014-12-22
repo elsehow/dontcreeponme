@@ -6,6 +6,8 @@ var my_color;
 var current_userlist; //this is an object of [username,color]
 var last_pseudo = ''; var last_date;
 
+var password = null;
+
 // Init
 $(function() {
 
@@ -70,15 +72,24 @@ socket.on('newuserlist', function(msg) {
 socket.on('message', function(data) {
 
 	var from = data['pseudo'];
+	var message = data['message']
+	if (password && from !== '((Lord DCOM bot))') {
+		message = sjcl.decrypt(password, message);
+	}
 
 	// special styling if it's an admin announcement (someone joining/leaving room fx)
 	if (from === '((Lord DCOM bot))')
-		addMessage(data['message'], from, new Date().toISOString(), false, true);
+		addMessage(message, from, new Date().toISOString(), false, true, false);
 
 	// don't show the message if it's from us
 	// we add the client's own messages on sentMessage() instead
-	else if (from !== pseudonym)
-		addMessage(data['message'], from, new Date().toISOString(), false, false);
+	else if (from !== pseudonym) {
+		if (password) {
+			addMessage(message, from, new Date().toISOString(), false, false,true);
+		} else {
+			addMessage(message, from, new Date().toISOString(), false, false,false);
+		}
+	}
 	
 
 	// increment unread message count if window's not in focus
@@ -98,9 +109,14 @@ socket.on('disconnect', function() {
 function sentMessage() {
 	if (messageContainer.val() != "") 
 	{
-			socket.emit('message',messageContainer.val());
-//			socket.broadcast.to(roomName).emit('message', messageContainer.val());
-			addMessage(messageContainer.val(), pseudonym, new Date().toISOString(), true, false);
+			var send_message = messageContainer.val()
+			if (password) {
+				socket.emit('message',sjcl.encrypt(password, send_message))
+				addMessage(send_message, pseudonym, new Date().toISOString(), true, false,true);
+			} else {
+				socket.emit('message',send_message);
+				addMessage(send_message, pseudonym, new Date().toISOString(), true, false,false);
+			}
 			messageContainer.val('');
 			submitButton.button('loading');
 		
@@ -131,10 +147,12 @@ function refreshUserlist(usersobject) { //we need to keep usersobject as current
 }
 
 
-function addMessage(msg, pseudo, date, self, admin) {
+function addMessage(msg, pseudo, date, self, admin, isEncrypted) {
 
 	//check msg for links
 	msg = replaceURLWithHTMLLinks(msg);
+
+	if (isEncrypted) { var display = pseudo+' <i>(encrypted)</i>'; } else { var display = pseudo; }
 
 	// each of these functions turns at most 1 image or video
 	// so, users get at most 1 video and 1 image (gif,jpeg and so on)
@@ -158,16 +176,17 @@ function addMessage(msg, pseudo, date, self, admin) {
 		else var classDiv = "row message";
 
 		if(self) {
-			var div = $('<div class="'+classDiv+'"><div class = "msgcolor"></div><div class="meta"><time class="date" title="'+date+'">'+date+'</time>'+pseudo+'</div><p>' + msg + '</p></div>');
+			var div = $('<div class="'+classDiv+'"><div class = "msgcolor"></div><div class="meta"><time class="date" title="'+date+'">'+date+'</time>'+display+'</div><p>' + msg + '</p></div>');
 
 		} else {
-			var div = $('<div class="'+classDiv+'"><div class = "msgcolor"></div><div class="meta">'+pseudo+' <time class="date" title="'+date+'">'+date+'</time></div><p>' + msg + '</p></div>');
+			var div = $('<div class="'+classDiv+'"><div class = "msgcolor"></div><div class="meta">'+display+' <time class="date" title="'+date+'">'+date+'</time></div><p>' + msg + '</p></div>');
 		}
 		if (!admin) {
 			// set the tag color according to user color
 			if (self) div.find(".msgcolor").css('background-color',my_color);
 			else div.find(".msgcolor").css('background-color','#'+current_userlist[pseudo]);
 		}
+
 		conversationContainer.append(div);
 	}
 
@@ -182,7 +201,7 @@ function addMessage(msg, pseudo, date, self, admin) {
 
 function clearScreen() {
 	conversationContainer.empty();	
-	addMessage('cleared screen', '((Lord DCOM Bot))', new Date().toISOString(), false, true);
+	addMessage('cleared screen', '((Lord DCOM Bot))', new Date().toISOString(), false, true, false);
 }
 
 
@@ -249,8 +268,10 @@ function setPseudo() {
 		socket.on('authresponse', function(data){
 			if(data.status == "ok")
 			{
-
 				enterChatroom(proposed_username);
+				if ($("#password").val().length > 0) {
+					password = $("#password").val();
+				}
 			}
 			else
 			{
@@ -259,11 +280,6 @@ function setPseudo() {
 			}
 		})
 	}
-}
-
-
-function changeUsername() {
-	showModalInterface();
 }
 
 
