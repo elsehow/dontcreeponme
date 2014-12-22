@@ -12,7 +12,6 @@ var jade = require('jade');
 var _ = require('underscore');
 
 // My stuff
-
 var appPort = 29420;
 var regex =  /[^A-Za-z0-9]/; // regular expression for validating usernames
 
@@ -33,7 +32,6 @@ app.get('/', function(req, res){
 // lazy handling for chatroom IDs.
 app.get('/:id', function(req, res) {
 	var id = req.params.id;
-	console.log('requesting ' + id);
 	res.render('chat.jade');
 });
 
@@ -76,7 +74,6 @@ io.sockets.on('connection', function(socket) { // First connection
 
 		// if all's well, allow joining:
 		else {
-			console.log(pseudo + " joins " + roomName);
 			//store color in the session for this client
 			socket.color = color;
 			//store username in the session for this client
@@ -114,7 +111,11 @@ io.sockets.on('connection', function(socket) { // First connection
 function announceNewUser(room) { 
 
 	var userlist = _.object(_.map(io.sockets.clients(room), function(o,v) {
-		return[o.username,o.color];
+		try {
+			if (o.username != undefined) {	
+				return[o.username,o.color];
+			}
+		} catch(e) {}
 	}));
 
 	//send this list to the clients in the room	
