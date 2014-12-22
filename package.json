@@ -1,0 +1,29 @@
+{
+  "name": "dontcreeponme",
+  "version": "1.0.0",
+  "description": "chat app",
+  "main": "server.js",
+  "dependencies": {
+    "express": "~4.6.1",
+    "jade": "~1.4.2",
+    "socket.io": "~0.8.7",
+    "underscore": "~1.6.0",
+    "validator": "~3.26.0",
+    "express-validator": "~2.7.0",
+    "sanitize-html": "~1.4.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/csmpls/dontcreeponme.git"
+  },
+  "author": "ffff",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/csmpls/dontcreeponme/issues"
+  }
+}

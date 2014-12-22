@@ -106,7 +106,8 @@ button {
 	margin-top:23%;
 } 
 .message p {
-	padding:0 20px;
+	/*padding:0 20px;*/
+	padding:0 34px;
 	display:block;
 }
 
@@ -135,7 +136,8 @@ button {
 }
 
 .self p {
-	padding:0 15px 0 12px;
+	/*padding:0 15px 0 12px;*/
+	padding:0 34px 0 12px;
 	display:block;
 }
 

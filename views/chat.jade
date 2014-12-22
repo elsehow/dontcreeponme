@@ -17,6 +17,9 @@ html
 		script(src="/script.js")
 
 	body
+		audio(preload="auto")#notifySound
+			source(src="notify.ogg")
+			source(src="notify.wav")
 
 		div#pickUsername
 			h3 Choose a pseudonym?

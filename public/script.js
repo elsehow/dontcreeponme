@@ -8,6 +8,8 @@ var last_pseudo = ''; var last_date;
 
 var password = null;
 
+var notificationSound = new Audio('notify.ogg');
+
 // Init
 $(function() {
 
@@ -151,6 +153,9 @@ function addMessage(msg, pseudo, date, self, admin, isEncrypted) {
 
 	//check msg for links
 	msg = replaceURLWithHTMLLinks(msg);
+
+	//check msg for mentions of user
+	msg = findUserMentions(msg,pseudonym);
 
 	if (isEncrypted) { var display = pseudo+' <i>(encrypted)</i>'; } else { var display = pseudo; }
 
@@ -317,6 +322,16 @@ function is_expired(date_str) {
 function replaceURLWithHTMLLinks(text) {
     var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
     return text.replace(exp,"<a href='$1' target='_blank'>$1</a>"); 
+}
+
+function findUserMentions(text, pseudo) {
+	if (text.indexOf('@'+pseudo) != -1) {
+		//play a sound
+		notificationSound.play()
+		//bold the mention
+		return text.replace('@'+pseudo,'<strong>@'+pseudo+'</strong>');
+	}
+	return text
 }
 
 // links come in here tagged with <a> </a> .. 
