@@ -101,8 +101,10 @@ io.sockets.on('connection', function(socket) { // First connection
 
 	socket.on('disconnect', function () { // Disconnection of the client
 		global_users -= 1;
-		socket.leave(socket.room);
-		announceNewUser(socket.room, socket.username, false);
+		if (socket.room) {
+		  socket.leave(socket.room);
+		  announceNewUser(socket.room, socket.username, false);
+		}
 	});
 });
 
@@ -112,7 +114,7 @@ function announceNewUser(room) {
 
 	var userlist = _.object(_.map(io.sockets.clients(room), function(o,v) {
 		try {
-			if (o.username != undefined) {	
+			if (o.username) {	
 				return[o.username,o.color];
 			}
 		} catch(e) {}
