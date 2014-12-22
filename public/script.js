@@ -112,6 +112,7 @@ function refreshUserlist(usersobject) { //we need to keep usersobject as current
 
 	var count = 0;
 	var userlistDiv = $('#userlistDiv');
+	userlistDiv.empty();
 
 	//userlistDiv.text('here: ');
 

@@ -5,7 +5,8 @@ var app = express();
 
 var http = require('http');
 var httpServer = http.createServer(app);
-var io = require('socket.io').listen(httpServer);
+var io = require('socket.io').listen(httpServer, {log:false });
+var sanitizeHtml = require('sanitize-html');
 
 var jade = require('jade');
 var _ = require('underscore');
@@ -22,7 +23,7 @@ app.set('view engine', 'jade');
 app.set('view options', { layout: false });
 io.set('transports', ['xhr-polling']); // this fixes a bug where users 502 on connect
 app.use(express.static(__dirname + '/public'));
-
+io.set('log level', 0);  // shouldnt be necessary given that logging is set to false in io's require statement, but just for kicks...
 
 // Render and send the main page
 app.get('/', function(req, res){
@@ -95,19 +96,10 @@ io.sockets.on('connection', function(socket) { // First connection
 	socket.on('message', function (data) { // Broadcast the message to all
 
 		//parse the message
-		var transmit = {date : new Date().toISOString(), pseudo : socket.username, message : data};
-
-		//before doing anything, make sure the user & room !== undefined
-		if (transmit['pseudo'] == undefined || socket.room == undefined) {
-			socket.leave(socket.room);
-			socket.emit('disconnect');
-		}
-
-		// if room and pseudo are defined ok, send the message
-		else {
-			io.sockets.in(socket.room).emit('message', transmit);
-			console.log("user "+ transmit['pseudo'] +" spoke something in " + socket.room);
-		}
+		var transmit = {date : new Date().toISOString(), pseudo : socket.username, message : sanitizeHtml(data, {
+  allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'style' ])
+})}; 
+		io.sockets.in(socket.room).emit('message', transmit);
 	});
 
 	socket.on('disconnect', function () { // Disconnection of the client
