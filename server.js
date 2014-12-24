@@ -5,14 +5,14 @@ var app = express();
 
 var http = require('http');
 var httpServer = http.createServer(app);
-var io = require('socket.io').listen(httpServer, {log:false });
+var io = require('socket.io').listen(httpServer);
 var sanitizeHtml = require('sanitize-html');
 
 var jade = require('jade');
 var _ = require('underscore');
 
 // My stuff
-var appPort = 29420;
+var appPort = 18696; //29420;
 var regex =  /[^A-Za-z0-9]/; // regular expression for validating usernames
 
 // Views Options
@@ -20,9 +20,8 @@ var regex =  /[^A-Za-z0-9]/; // regular expression for validating usernames
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.set('view options', { layout: false });
-io.set('transports', ['xhr-polling']); // this fixes a bug where users 502 on connect
 app.use(express.static(__dirname + '/public'));
-io.set('log level', 0);  // shouldnt be necessary given that logging is set to false in io's require statement, but just for kicks...
+//io.set('log level', 0);  // shouldnt be necessary given that logging is set to false in io's require statement, but just for kicks...
 
 // Render and send the main page
 app.get('/', function(req, res){
