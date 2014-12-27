@@ -92,7 +92,7 @@ io.sockets.on('connection', function(socket) { // First connection
 	socket.on('message', function (data) { // Broadcast the message to all
 
 		//parse the message
-		var transmit = {date : new Date().toISOString(), pseudo : socket.username, message : sanitizeHtml(data, {
+		var transmit = {pseudo : socket.username, message : sanitizeHtml(data, {
   allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'style' ])
 })}; 
 		io.sockets.in(socket.room).emit('message', transmit);
