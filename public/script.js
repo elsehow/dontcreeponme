@@ -109,6 +109,8 @@ socket.on('disconnect', function() {
 	showModalInterface();
 })
 
+
+
 //Help functions
 function sentMessage() {
 	if (messageContainer.val() != "") 
@@ -284,6 +286,7 @@ function setPseudo() {
 			{
 				$('#alertPseudo').html(data.status);
 				$("#alertPseudo").slideDown();
+				btn.text('Join');
 			}
 		})
 	}
