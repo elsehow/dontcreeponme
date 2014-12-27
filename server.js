@@ -13,7 +13,7 @@ var _ = require('underscore');
 
 // My stuff
 var appPort = 18696; //29420;
-var regex =  /[^A-Za-z0-9]/; // regular expression for validating usernames
+var regex =  /[^A-Za-z0-9\(\)\s]/; // regular expression for validating usernames
 
 // Views Options
 
@@ -62,7 +62,7 @@ io.sockets.on('connection', function(socket) { // First connection
 		// verify that username doesn't contain any bad chars
 		else if (regex.test(pseudo)) {
 			socket.emit('authresponse', 
-				{'status':"For now no spaces, letters a-z and numbers. This will be more permissive soon."});
+				{'status':"For now no spaces, letters a-z and numbers only. This will be more permissive soon."});
 		}
 
 		// check that username is unique in this room

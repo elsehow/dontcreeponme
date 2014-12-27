@@ -28,7 +28,7 @@ input, button {
 	padding: 0.5em 0 0.5em 0.7em;
 	width: calc(100%);
 	border: none;
-	background: #D2D6D6;
+	background: #F9f9f9;
 	outline:none;
 	color: rgba(1,1,1,0.8);
 	font-size: 1em;
@@ -63,8 +63,8 @@ input, button {
 }
 
 button {
-  background: #AEAEAE;
-	padding:0.5em 0;
+  background: #AFB1BD;
+  padding:0.5em 0;
 }
 
 
