@@ -71,17 +71,19 @@ socket.on('newuserlist', function(userlist) {
 	refreshUserlist(userlist);
 });
 
+socket.on('announcement', function(data) {
+	console.log(data);
+	addMessage(data, '', new Date().toISOString(), false, true, false);
+
+});
+
 socket.on('message', function(data) {
 
 	var from = data['pseudo'];
 	var message = data['message']
-	if (password && from !== '((Lord DCOM bot))') {
+	if (password) {
 		message = sjcl.decrypt(password, message);
 	}
-
-	// special styling if it's an admin announcement (someone joining/leaving room fx)
-	if (from === '((Lord DCOM bot))')
-		addMessage(message, from, new Date().toISOString(), false, true, false);
 
 	// don't show the message if it's from us
 	// we add the client's own messages on sentMessage() instead
@@ -126,7 +128,7 @@ function sentMessage() {
 }
 
 function refreshUserlist(usersobject) { //we need to keep usersobject as current_userlist
-	current_userlist = usersobject['userlist'];
+	current_userlist = usersobject;
 
 	var count = 0;
 	var userlistDiv = $('#userlistDiv');
@@ -206,7 +208,7 @@ function addMessage(msg, pseudo, date, self, admin, isEncrypted) {
 
 function clearScreen() {
 	conversationContainer.empty();	
-	addMessage('cleared screen', '((Lord DCOM Bot))', new Date().toISOString(), false, true, false);
+	addMessage('cleared screen', '', new Date().toISOString(), false, true, false);
 }
 
 

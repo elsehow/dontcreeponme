@@ -135,8 +135,7 @@ function announceNewUser(room) {
 		} else {
 			msg += " leaves the room.";
 		}
-		var transmit = {date : new Date().toISOString(), pseudo : '((Lord DCOM bot))', message : msg};
-		io.sockets.in(room).emit('message', transmit);
+		io.sockets.in(room).emit('announcement', msg);
 	}
 
 }
