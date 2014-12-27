@@ -120,7 +120,7 @@ function announceNewUser(room) {
 	}));
 
 	//send this list to the clients in the room	
-	io.sockets.in(room).emit('newuserlist', {"userlist":userlist});
+	io.sockets.in(room).emit('newuserlist',userlist);
 
 	//send a message to all users announcing the join
 	if (arguments[1]) {

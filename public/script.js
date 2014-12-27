@@ -67,8 +67,8 @@ var roomName = document.location.pathname.split('/')[1];
 socket.on('connect', function() {
 });
 
-socket.on('newuserlist', function(msg) {
-	refreshUserlist(msg.userlist);
+socket.on('newuserlist', function(userlist) {
+	refreshUserlist(userlist);
 });
 
 socket.on('message', function(data) {
@@ -126,7 +126,7 @@ function sentMessage() {
 }
 
 function refreshUserlist(usersobject) { //we need to keep usersobject as current_userlist
-	current_userlist = usersobject;
+	current_userlist = usersobject['userlist'];
 
 	var count = 0;
 	var userlistDiv = $('#userlistDiv');
