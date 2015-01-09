@@ -1,5 +1,6 @@
 var messageContainer, submitButton, conversationContainer;
 var windowIsInFocus = true; 
+var scrolledToBottom = true;
 var unreadMessageCount;
 var my_color;
 var current_userlist; //this is an object of [username,color]
@@ -50,6 +51,16 @@ $(function() {
     	
 	});
 
+	$('#missedMessages').hide();
+ 	$(window).scroll(function() {
+		// if !scrolledToBottom but user has scrolled to bottom of page
+ 		if (!scrolledToBottom && $(window).scrollTop() + $(window).height() == $(document).height()) {
+                        scrolledToBottom=true;
+			unreadMessageCount = 0;
+                        $('#missedMessages').hide().empty();
+                }
+	});
+
 	submitButton.click(function() {sentMessage();});
 });
 
@@ -98,10 +109,14 @@ socket.on('message', function(data) {
 	}
 
 	// increment unread message count if window's not in focus
+	if (!windowIsInFocus || !scrolledToBottom)  unreadMessageCount++;
+
 	if (!windowIsInFocus) {
-		unreadMessageCount++;
 		updatePageTitle();
-	}
+	} 
+	//if (!scrolledToBottom) {
+	//	updateMissedMessageDiv();
+	//}
 });
 
 
@@ -302,7 +317,8 @@ function setPseudo() {
 function setConversationScroll() {
 	// if the user has scrolled up a bit
 	if ($(window).scrollTop() + $(window).height() < $(document).height()-150) {
-		//TODO: add a  box that says how many messages they missed
+		// make sure thats indicated
+		if (scrolledToBottom) scrolledToBottom = false;
 	}
 	// otherwise, scroll down to the bottom
 	else {
@@ -319,6 +335,13 @@ function updatePageTitle() {
 	title += roomName + " — dcom";
 
 	document.title = title;
+}
+
+function updateMissedMessageDiv() {
+	$('#missedMessages').show();
+	if (unreadMessageCount == 1) $('#missedMessages').html('<p>1 new message</p>');
+	else if (unreadMessageCount < 15) $('#missedMessages').html('<p>'+unreadMessageCount + ' new messages</p>');
+	if (unreadMessageCount > 15) $('#missedMessages').html('<p>lots of new messages</p>');
 }
 
 function setTimeAgo() {
@@ -391,7 +414,7 @@ function windowFocusInit() {
 
         if (this[hidden]) {
         	windowIsInFocus = false;
-        	unreadMessageCount = 0;
+		unreadMessageCount = 0;
         } else {
         	windowIsInFocus = true;
         	unreadMessageCount = 0;

@@ -201,6 +201,20 @@ list-style-type: none;
 color:#C6C8CA;
 }
 
+#missedMessages {
+  background-color: #f9f9f9;
+  opacity: 0.95;
+  color: #676767;
+  position: fixed;
+  padding: 5px 20px;
+  bottom: 30px;
+  left: 45%;
+  z-index: 99999;
+}
+#missedMessages p {
+ margin:0;
+}
+
 /* #Media Queries
 ================================================== */
 

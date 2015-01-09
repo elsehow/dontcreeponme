@@ -98,14 +98,23 @@ io.sockets.on('connection', function(socket) { // First connection
 		io.sockets.in(socket.room).emit('message', transmit);
 	});
 
+	socket.on('leaveroom', function () { // Disconnection of the client
+		leaveRoom(socket);
+	});
+
 	socket.on('disconnect', function () { // Disconnection of the client
-		global_users -= 1;
-		if (socket.room) {
-		  socket.leave(socket.room);
-		  announceNewUser(socket.room, socket.username, false);
-		}
+		leaveRoom(socket);
 	});
 });
+
+
+function leaveRoom(socket) {
+	global_users -= 1;
+        if (socket.room) {
+                  socket.leave(socket.room);
+                  announceNewUser(socket.room, socket.username, false);
+       }
+}
 
 // Send the list of users to everyone in the room
 // announce new user's name over chat too
