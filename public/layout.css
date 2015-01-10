@@ -60,8 +60,9 @@ display:block;
 padding-top: 10px;
 margin-top: 30px;
  background-color:rgba(139, 139, 139, 0.48);
- width:600px;
-margin-left:20%;
+ max-width:600px;
+ min-width:350px;
+margin-left:10%;
 }
 #pickUsername p, #pickUsername h1 {
   margin-bottom:20px;
@@ -233,6 +234,12 @@ color:#C6C8CA;
 }
 #missedMessages p {
  margin:0;
+}
+#chatURL {
+  margin-bottom:20px;
+  font-size:16pt;
+  color:rgba(0, 255, 120, 1);
+  display:block;
 }
 
 /* #Media Queries

@@ -1,23 +1,123 @@
-doctypehtml
-html
-	head
-		title Chat
-		meta(name="viewport", content="width=device-width, initial-scale=1, maximum-scale=1")
-		script(src='//code.jquery.com/jquery-1.9.1.min.js')
-		link(rel="stylesheet", href="bootstrap.min.css")
-		script(src="/homepage.js")
-	body
-		div.container#main
-			img(src='/dont-creep-small.png', style='margin-left:auto; max-width:95%;')
-			div#alert
-			p 	
-			p	DCOM is a simple chat app that does not track you in any way. Messages are never stored on our servers - they're transmitted only to people who are in the chatroom at the time that you sent your message.
-			p 	Go to dontcreepon.me/[anythinghere] to make a new chatroom. Share that URL with whomever you'd like to chat with.
-			p	Alternatively, just type the name of a chatroom to go there:
-			input(type='text' autofocus)#chatroomName
-			button(onclick="joinChatroom()")#joinChatroomButton Join chat!
+doctype html(lang='en')
+head
+    meta(charset='utf-8')
+    |     
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    |     
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    |     
+    meta(name='description', content='')
+    |     
+    meta(name='author', content='')
+    |     
+    title Don&apos;t Creep On Me
+    // Bootstrap Core CSS
+    link(href='bootstrap.min.css', rel='stylesheet')
+    // Custom CSS
+    link(href='splashpage.css', rel='stylesheet')
+    // Custom Fonts
+    link(href='font-awesome/css/font-awesome.min.css', rel='stylesheet', type='text/css')
+    |     
+    link(href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic', rel='stylesheet', type='text/css')
+    |     
+    link(href='//fonts.googleapis.com/css?family=Montserrat:400,700', rel='stylesheet', type='text/css')
+    // HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries
+    // WARNING: Respond.js doesn't work if you view the page via file://
+    //if lt IE 9
+      script(src='//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js')
+      |         
+      script(src='//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js')
+  body#page-top(data-spy='scroll', data-target='.navbar-fixed-top')
+    // Navigation
+    nav.navbar.navbar-custom.navbar-fixed-top(role='navigation')
+      .container
+        .navbar-header
+          button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-main-collapse')
+            i.fa.fa-bars
+          |                 
+          a.navbar-brand.page-scroll(href='#page-top')
+            i.fa.fa-circle-o
+            |   
+            span.light Don&apos;t
+            |  Creep 
+            span.light On Me 
+        // Collect the nav links, forms, and other content for toggling
+        .collapse.navbar-collapse.navbar-right.navbar-main-collapse
+          ul.nav.navbar-nav
+            // Hidden li included to remove active class from about link when scrolled up past about section
+            li.hidden
+              a(href='#page-top')
+            |                     
+            li
+              a.page-scroll(href='#about') learn more
+        // /.navbar-collapse
+      // /.container
+    // Intro Header
+    header.intro
+        .container
+          .row
+            .col-md-3.col-sm-4
+              span.btn.btn-circle.logo  
+            |                     
+            .col-md-6.col-sm-6.col-sm-offset-1.col-md-offset-1.col-lg-offset-0
+              h1 Chat without leaving a trace
+              |                        
+              p
+                input.btn.btn-default.btn-lg#chatroomName.input(placeholder='chat name' autofocus)
+                |                         
+                a.btn.btn-default.btn-lg#joinChatroom(onclick='joinChatroom()') Go!
+                |                         
+              .alert.alert-dismissable.alert-danger(style="display:none")
+              p
+                | Off-the-record chat with no signups. Just join a chatroom and invite your friends. You are not being tracked. 
+                a.page-scroll(href='#about') Learn more...
+              //
+                <a href="#tryit" class="btn btn-circle page-scroll">
+                <i class="fa fa-angle-double-down animated"></i>
+                </a>
+    // About Section
+    section#about.about
+      .intro-body
+        .container
+          .row
+            .col-md-8.col-md-offset-2
+              h1 Private, secure chat for anyone with a web browser.
+              |                     
+              p
+                | Messages are sent to people who are in the chatroom at the time you sent your message.
+              |                     
+              p We do not track you in any way. We never store your messages on our server.
+    // tryit Section
+    section#tryit.tryit
+      .intro-body
+        .container
+          .row
+            .col-md-8.col-md-offset-2
+              h2
+                i.fa.fa-eye-slash
+                |  Nothing logged
+              |                         
+              p
+                | Messages go to people who are in a room with you at the time you sent. We never log messages on our server.
+              h2
+                i.fa.fa-ban
+                |  No tracking
+              |                         
+              p
+                | We require no signups or accounts, and we do not track you in any way.
+              h2
+                i.fa.fa-key
+                |  End-to-end encryption
+              |                         
+              p
+                | Your data is encrypted from the moment you send your message to the moment its received by your friends.
+          |                 
+          .row(style='padding-top:60px;')
+            .col-md-8.col-md-offset-2
+              small Copyright &copy; dontcreepon.me 2015.
 
-			p 
-				| This project is open source and all code is 
-				a(href='http://github.com/csmpls/dontcreeponme') right here
-				| , do consider contributing if you'd like to see this software move forward.
+    script(src='//code.jquery.com/jquery-1.9.1.min.js')
+    script(src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js')
+    script(src='jquery.easing.min.js')
+    script(src='homepage.js')
+

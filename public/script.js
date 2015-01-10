@@ -21,6 +21,8 @@ $(function() {
 	bindSendButton();
 	window.setInterval(setTimeAgo, 1000*10);
 
+	$('#chatURL').html('dontcreepon.me'.concat(document.location.pathname));
+
 	// set focus to message container on all mouseup
 	$('body').mouseup(function() {
 		messageContainer.focus()
@@ -310,10 +312,11 @@ function setPseudo() {
 }
 
 
-function setConversationScroll() {
-	// if the user has scrolled up a bit
-	if ($(window).scrollTop() + $(window).height() < $(document).height()-150) {
-		// make sure thats indicated
+function setConversationScroll(ignoreScrolledUp) {
+
+	// if the user has scrolled up a bit (& no argument was passed to this function)
+	if (ignoreScrolledUp === undefined && $(window).scrollTop() + $(window).height() < $(document).height()-150) {
+		// dont scroll up - just indicate we're not at bottom
 		if (scrolledToBottom) scrolledToBottom = false;
 	}
 	// otherwise, scroll down to the bottom
@@ -372,11 +375,10 @@ function pullImagesFromLinks(text,div) {
 		var img = new Image();
 		img.src = pulledURL;
         	img.onload = function() {
-			// remove the original url
-			div.html(text.replace(exp,''));
+			//TODO: remove the original url
 			// slap the new image on there
 			div.append('<p><img src="' + pulledURL + '"">');
-			setConversationScroll();
+			setConversationScroll(false);
 		}
 	}
 }
