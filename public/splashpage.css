@@ -150,6 +150,7 @@ a:focus {
 } 
 .about {
     background-color:#2A5F48;
+    padding-top:150px;
 }
 .tryit {
     padding-top:150px;
@@ -311,7 +312,7 @@ a:focus {
 
 .btn-default:hover,
 .btn-default:focus {
-    border: 1px solid #219ab3;
+    border:1px solid #6DB321;
     outline: 0;
     /*color: #000;*/
     /*background-color: #219ab3;*/
