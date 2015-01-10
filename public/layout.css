@@ -35,6 +35,11 @@ input, button {
 	opacity: 0.9;
 }
 
+#pseudoSubmit {
+width:auto;
+display:block;
+}
+
 .modal-backdrop {
   opacity:1;
 }
@@ -48,11 +53,16 @@ input, button {
 }
 
 #pickUsername {
-  background:#ccc;
-  padding:20px 40px;
-  width:45%;
-  margin:40px auto;
-  min-width:300px;
+padding-top: 10px;
+margin-top: 30px;
+ background-color:rgba(139, 139, 139, 0.48)
+}
+#pickUsername p, #pickUsername h1 {
+  margin-bottom:20px;
+}
+.jumbotron p {
+  padding-top:20px;
+  font-size:12pt !important;
 }
 
 .nopaddingLeft {

@@ -50,6 +50,13 @@ $(function() {
     	palette: colorpalette
     	
 	});
+	
+	$('#key').on('shown', function () {
+	  $('#key').collapse({
+		toggle:false,
+	  })
+	})
+
 
 	$('#missedMessages').hide();
  	$(window).scroll(function() {
