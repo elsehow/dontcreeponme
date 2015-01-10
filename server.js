@@ -13,7 +13,7 @@ var _ = require('underscore');
 
 // My stuff
 var appPort = 18696; //29420;
-var regex =  /[^A-Za-z0-9\(\)\s]/; // regular expression for validating usernames
+var regex =  /[^A-Za-z0-9\(\)]/; // regular expression for validating usernames
 
 // Views Options
 

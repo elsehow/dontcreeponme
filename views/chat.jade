@@ -35,21 +35,7 @@ html
 			.row
 				.col-md-10.col-lg-10.col-sm-10.col-xs-10.nopaddingRight
 					p 	You're about to enter an off-the-record chat. Only the people in the room with you at the same time will recieve your messages. Nothing will be stored permanently on our servers. You are not being tracked.
-			.row
-				.col-md-10.col-lg-10.col-sm-10.col-xs-10.nopaddingRight
-					#key.accordion
-						.accordion-group
-							.accordion-heading
-								a.accordion-toggle(data-toggle='collapse', data-parent='#accordion2', href='#collapseOne')
-									| Use a key...
-									|     
-									#collapseOne.accordion-body.collapse.i
-											.accordion-inner
-											.col-md-4.col-lg-4.col-sm-4.col-xs-4
-												p	key: (optional)
-											.col-md-8.col-lg-8.col-sm-8.col-xs-8
-												input(type='text')#password
-					p 	 	
+					input(type='text', style='display:none')#password
 			button.btn.btn-primary.btn-lg#pseudoSubmit Join
 
 		div.container#main

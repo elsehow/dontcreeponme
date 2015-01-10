@@ -30,16 +30,11 @@ $(function() {
 	conversationContainer.empty();	
 	showModalInterface();
 	var colorpalette =  [
-    		['06017F', '030040', '0D01FF'],
-    		['48047F', '240240', '9009FF'],
-    		['7F0008', '400004', 'FF0010'],
-    		['402A0A', 'FD2CFF', 'FFE637'],
-    		['A6FF00', '00F0FF', '00FF10'],
-    		['B9C5FF', 'CBFFA0', 'CC836C'],
-    		['5EB289', 'B9FFDD', '6107B2']
+		['#FF0000', '#E8E712', '#7EE8D1'],
+                ['#0002E8','#EB2FFF', '#FF730A'],
 	];
 	
-	var startColor = colorpalette[Math.floor((Math.random()*7))][Math.floor((Math.random()*3))]
+	var startColor = colorpalette[Math.floor((Math.random()*2))][Math.floor((Math.random()*3))]
 
 	$("#colorpicker").spectrum({
 		preferredFormat: "hex",
@@ -50,12 +45,6 @@ $(function() {
     	palette: colorpalette
     	
 	});
-	
-	$('#key').on('shown', function () {
-	  $('#key').collapse({
-		toggle:false,
-	  })
-	})
 
 
 	$('#missedMessages').hide();

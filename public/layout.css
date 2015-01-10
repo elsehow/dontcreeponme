@@ -35,6 +35,10 @@ input, button {
 	opacity: 0.9;
 }
 
+.sp-container {
+  top:30px;
+}
+
 #pseudoSubmit {
 width:auto;
 display:block;
@@ -55,7 +59,9 @@ display:block;
 #pickUsername {
 padding-top: 10px;
 margin-top: 30px;
- background-color:rgba(139, 139, 139, 0.48)
+ background-color:rgba(139, 139, 139, 0.48);
+ width:600px;
+margin-left:20%;
 }
 #pickUsername p, #pickUsername h1 {
   margin-bottom:20px;
@@ -156,6 +162,10 @@ button {
   background-image: url("key.png");
   background-repeat: no-repeat;
   background-position: right top;
+}
+
+.sp-container {
+top:30px !important;
 }
 
 
