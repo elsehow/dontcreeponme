@@ -21,7 +21,7 @@ $(function() {
 	// setup interface for eliciting user's handle
 	conversationContainer = $("#chatEntries")
 	conversationContainer.empty();	
-	$('#chatURL').html('dontcreepon.me'.concat(document.location.pathname));
+	$('#chatURL').val('dontcreepon.me'.concat(document.location.pathname));
 	showModalInterface();
 
 	// set focus to message input on all mouseup
@@ -436,4 +436,10 @@ function setupScrollListener() {
                         $('#missedMessages').hide().empty();
                 }
         });
+}
+
+function selectAll(id)
+{
+    document.getElementById(id).focus();
+    document.getElementById(id).select();
 }

@@ -229,6 +229,11 @@ color:#C6C8CA;
   font-size:16pt;
   color:rgba(0, 255, 120, 1);
   display:block;
+  font-size:12pt;
+}
+.copybox {
+ background:rgba(52, 56, 55, 0.5);
+ width:auto;
 }
 
 /* #Media Queries
