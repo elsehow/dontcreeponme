@@ -1,4 +1,4 @@
-var messageContainer, submitButton, conversationContainer;
+var messageInput, submitButton, conversationContainer;
 var windowIsInFocus = true; 
 var scrolledToBottom = true;
 var unreadMessageCount;
@@ -12,53 +12,25 @@ var notificationSound = new Audio('notify.ogg');
 // Init
 $(function() {
 
-
 	windowFocusInit();
-
-	messageContainer = $('#messageInput');
-	submitButton = $("#submit");
-	conversationContainer = $("#chatEntries")
-	bindSendButton();
 	window.setInterval(setTimeAgo, 1000*10);
 
-	$('#chatURL').html('dontcreepon.me'.concat(document.location.pathname));
-
-	// set focus to message container on all mouseup
-	$('body').mouseup(function() {
-		messageContainer.focus()
-	})
+	messageInput = $('#messageInput');
+	submitButton = $("#submit");
 
 	// setup interface for eliciting user's handle
+	conversationContainer = $("#chatEntries")
 	conversationContainer.empty();	
+	$('#chatURL').html('dontcreepon.me'.concat(document.location.pathname));
 	showModalInterface();
-	var colorpalette =  [
-		['#FF0000', '#E8E712', '#7EE8D1'],
-                ['#0002E8','#EB2FFF', '#FF730A'],
-	];
-	
-	var startColor = colorpalette[Math.floor((Math.random()*2))][Math.floor((Math.random()*3))]
 
-	$("#colorpicker").spectrum({
-		preferredFormat: "hex",
-		showPaletteOnly: true,
-	    showPalette:true, 
-	    clickoutFiresChange: true,
-	    color: startColor,
-    	palette: colorpalette
-    	
-	});
+	// set focus to message input on all mouseup
+	$('body').mouseup(function() {
+		messageInput.focus()
+	})
 
-
-	$('#missedMessages').hide();
- 	$(window).scroll(function() {
-		// if !scrolledToBottom but user has scrolled to bottom of page
- 		if (!scrolledToBottom && $(window).scrollTop() + $(window).height() == $(document).height()) {
-                        scrolledToBottom=true;
-			unreadMessageCount = 0;
-                        $('#missedMessages').hide().empty();
-                }
-	});
-
+	setupColorPicker();
+	setupScrollListener();
 	submitButton.click(function() {sentMessage();});
 });
 
@@ -127,9 +99,9 @@ socket.on('disconnect', function() {
 
 //Help functions
 function sentMessage() {
-	if (messageContainer.val() != "") 
+	if (messageInput.val() != "") 
 	{
-			var send_message = messageContainer.val()
+			var send_message = messageInput.val()
 			if (password) {
 				socket.emit('message',sjcl.encrypt(password, send_message))
 				addMessage(send_message, pseudonym, new Date().toISOString(), true, false,true);
@@ -137,7 +109,7 @@ function sentMessage() {
 				socket.emit('message',send_message);
 				addMessage(send_message, pseudonym, new Date().toISOString(), true, false,false);
 			}
-			messageContainer.val('');
+			messageInput.val('');
 			submitButton.button('loading');
 		
 	}
@@ -197,12 +169,14 @@ function addMessage(msg, pseudo, date, fromSelf, isAnnouncement, isEncrypted) {
 		if(fromSelf) divClass += " self";
 		else if(isAnnouncement) divClass += " admin";
 
-		var divString = '<div class="'+divClass+'"><div class = "msgcolor"></div>'
+		var divString = '<div class="'+divClass+'">'
 
 		if(fromSelf) {
-			divString += '<div class="meta">'+getDateDiv(date)+displayName+'</div>';
+			divString += '<div class = "msgcolor"></div><div class="meta">'+getDateDiv(date)+displayName+'</div>';
+		} else if (isAnnouncement) {
+			divString += '<div class="meta">'+getDateDiv(date)+'</div>';
 		} else {
-			divString += '<div class="meta">'+displayName+getDateDiv(date)+'</div>';
+			divString += '<div class = "msgcolor"></div><div class="meta">'+displayName+getDateDiv(date)+'</div>';
 		}
 
 		divString+='<p>' + msg + '</p></div>';
@@ -233,14 +207,6 @@ function getDateDiv(date) {
 }
 
 
-function bindSendButton() {
-	submitButton.button('loading');
-	// messageContainer.on('input', function() {
-	// 	if (messageContainer.val() == "") submitButton.button('loading');
-	// 	else submitButton.button('reset');
-	// });
-}
-
 function bindEnterToPseudoSubmit() {
 	// when the client hits ENTER
 	$('#pseudoInput').keypress(function(e) {
@@ -254,12 +220,12 @@ function bindEnterToPseudoSubmit() {
 
 function bindEnterToSendMessage() {
 	// when the client hits ENTER
-	$(messageContainer).keypress(function(e) {
+	$(messageInput).keypress(function(e) {
 		if(e.which == 13) {
 			$(this).blur();
 			// submit the message
 			$(submitButton).focus().click();
-			$(messageContainer).focus().click();
+			$(messageInput).focus().click();
 		}
 	});
 }
@@ -429,13 +395,45 @@ function enterChatroom(proposed_username) {
 
 	// we are in, hide the modal interface
 	$('#pickUsername').hide();
-	$("#alertPseudo").hide();
 	// show chat window
 	$("#main").show();
 	// bind enter to send
 	bindEnterToSendMessage();
 	// highlight the text entry field
-	$(messageContainer).focus().click();
+	$(messageInput).focus().click();
 	// turn page title into chatroom name
 	updatePageTitle();
+}
+
+function setupColorPicker() {
+
+	var colorpalette =  [
+                ['#FF0000', '#E8E712', '#7EE8D1'],
+                ['#0002E8','#EB2FFF', '#FF730A'],
+        ];
+
+        var startColor = colorpalette[Math.floor((Math.random()*2))][Math.floor((Math.random()*3))]
+
+        $("#colorpicker").spectrum({
+                preferredFormat: "hex",
+                showPaletteOnly: true,
+            showPalette:true,
+            clickoutFiresChange: true,
+            color: startColor,
+        palette: colorpalette
+
+        });
+
+}
+
+function setupScrollListener() {
+        // scroll listener
+        $(window).scroll(function() {
+                // if !scrolledToBottom but user has scrolled to bottom of page
+                if (!scrolledToBottom && $(window).scrollTop() + $(window).height() == $(document).height()) {
+                        scrolledToBottom=true;
+                        unreadMessageCount = 0;
+                        $('#missedMessages').hide().empty();
+                }
+        });
 }

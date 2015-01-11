@@ -2,14 +2,8 @@ l.animated{-webkit-animation-fill-mode:both;-moz-animation-fill-mode:both;-ms-an
 
 body { background-color:transparent !important; }
 
-.brand {
-    color: #fff;
-   font-weight:700;
-  text-transform:uppercase;
-  height:40px;
-  line-height:21px;
-  font-size:16px;
-  padding:9.5px 15px;
+#alertPseudo {
+  margin:20px 0 0 0;
 }
 
 html { min-height:100%; background: #39804a; /* Old browsers */ background: -moz-linear-gradient(top, #39804a 0%, #193746 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#39804a), color-stop(100%,#193746)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #39804a 0%,#193746 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #39804a 0%,#193746 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #39804a 0%,#193746 100%); /* IE10+ */ background: linear-gradient(to bottom, #39804a 0%,#193746 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#39804a', endColorstr='#193746',GradientType=0 ); /* IE6-9 */
@@ -91,9 +85,7 @@ button {
 
 .admin {
 	padding-top:20px;
-} .admin .meta {
-	display:none;
-}
+} 
 
 #chatEntries {
 	color:#f1f1f1;

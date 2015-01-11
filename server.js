@@ -13,7 +13,7 @@ var _ = require('underscore');
 
 // My stuff
 var appPort = 18696; //29420;
-var regex =  /[^A-Za-z0-9\(\)]/; // regular expression for validating usernames
+var regex =  /[^a-zA-Z1-9]+/; // regular expression for validating usernames
 
 // Views Options
 
@@ -21,7 +21,7 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.set('view options', { layout: false });
 app.use(express.static(__dirname + '/public'));
-//io.set('log level', 0);  // shouldnt be necessary given that logging is set to false in io's require statement, but just for kicks...
+io.set('log level', 0);  
 
 // Render and send the main page
 app.get('/', function(req, res){
