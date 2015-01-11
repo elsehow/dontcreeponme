@@ -31,8 +31,9 @@ input, button {
 }
 
 #pseudoSubmit {
-width:auto;
 display:block;
+float:right;
+margin-top:8px;
 }
 
 .modal-backdrop {
