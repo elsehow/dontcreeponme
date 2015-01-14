@@ -156,6 +156,8 @@ function addMessage(msg, pseudo, date, fromSelf, isAnnouncement, isEncrypted) {
 		// get the last div
 		var last_msg = $( "#chatEntries .message").last();
 		last_msg.append("<p>" + msg + "</p>");
+		// adjust the height of the color bar
+		last_msg.children('.msgcolor').css('height',last_msg.height()-14)
 		// returns at most 1 image or video
 		msg = pullImagesFromLinks(msg, last_msg);
 

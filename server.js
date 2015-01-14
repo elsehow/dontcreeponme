@@ -93,7 +93,7 @@ io.sockets.on('connection', function(socket) { // First connection
 
 		//parse the message
 		var transmit = {pseudo : socket.username, message : sanitizeHtml(data, {
-  allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'style' ])
+  allowedTags: sanitizeHtml.defaults.allowedTags//.concat([ 'style' ])
 })}; 
 		io.sockets.in(socket.room).emit('message', transmit);
 	});
