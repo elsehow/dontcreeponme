@@ -31,7 +31,7 @@ app.get('/', function(req, res){
 // lazy handling for chatroom IDs.
 app.get('/:id', function(req, res) {
 	var id = req.params.id;
-	res.render('chat.jade');
+	res.render('chat.jade', {roomName:id});
 });
 
 httpServer.listen(appPort);
@@ -93,9 +93,10 @@ io.sockets.on('connection', function(socket) { // First connection
 
 		//parse the message
 		var transmit = {pseudo : socket.username, message : sanitizeHtml(data, {
-  allowedTags: sanitizeHtml.defaults.allowedTags//.concat([ 'style' ])
-})}; 
+  			allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'marquee', 'blink' ])
+		})}; 
 		io.sockets.in(socket.room).emit('message', transmit);
+
 	});
 
 	socket.on('leaveroom', function () { // Disconnection of the client
