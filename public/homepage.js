@@ -8,14 +8,11 @@ function joinChatroom() {
 	}
 }
 
-
 $(document).keydown(function(e){
     if (e.which === 13) {
 	joinChatroom();
 	}
 });
-
-
 
 $(document).ready(function(){
   $('a[href*=#]').click(function() {
