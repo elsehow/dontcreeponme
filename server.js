@@ -1,15 +1,15 @@
 // Libraries
 
-var express = require('express');
-var app = express();
+var express = require('express'),
+	app = express();
 
-var http = require('http');
-var httpServer = http.createServer(app);
-var io = require('socket.io').listen(httpServer);
-var sanitizeHtml = require('sanitize-html');
+var http = require('http'),
+	httpServer = http.createServer(app),
+	io = require('socket.io').listen(httpServer),
+	sanitizeHtml = require('sanitize-html');
 
-var jade = require('jade');
-var _ = require('underscore');
+var jade = require('jade'),
+	_ = require('underscore');
 
 // My stuff
 var appPort = 18696; //29420;
@@ -39,40 +39,15 @@ console.log('Server listening on port ' + appPort);
 
 // Handle the socket.io connections
 
-var global_users = 0; //count the global_users
-
 io.sockets.on('connection', function(socket) { // First connection
-	
-	global_users += 1; // Add 1 to the count
 	
 	socket.on('joinattempt', function(roomName, pseudo, color) {
 
-		// verify that they entered something
-		if (!pseudo || pseudo.length==0) {
-			socket.emit('authresponse', 
-				{'status':'Enter a pseudonym.'});
-		}
+		var val = validatePseudo(pseudo,roomName);
 
-		// verify that the username is 3-140 char
-		else if (pseudo.length>140) {
-			socket.emit('authresponse', 
-				{'status':"Pseudonyms have to be 1-140 characters. Sorry."});
-		}
-
-		// verify that username doesn't contain any bad chars
-		else if (regex.test(pseudo)) {
-			socket.emit('authresponse', 
-				{'status':"For now no spaces, letters a-z and numbers only. This will be more permissive soon."});
-		}
-
-		// check that username is unique in this room
-		else if(!isUsernameUnique(pseudo,roomName)) {
-			socket.emit('authresponse', 
-				{'status':"That pseudonym's already taken in this room."});
-		}
-
-		// if all's well, allow joining:
-		else {
+		if (val) {
+			socket.emit('authresponse', {'status':val} );
+		} else { // if all's well, allow joining: 
 			//store color in the session for this client
 			socket.color = color;
 			//store username in the session for this client
@@ -110,11 +85,10 @@ io.sockets.on('connection', function(socket) { // First connection
 
 
 function leaveRoom(socket) {
-	global_users -= 1;
-        if (socket.room) {
-                  socket.leave(socket.room);
-                  announceNewUser(socket.room, socket.username, false);
-       }
+    if (socket.room) {
+          socket.leave(socket.room);
+          announceNewUser(socket.room, socket.username, false);
+   }
 }
 
 // Send the list of users to everyone in the room
@@ -150,13 +124,36 @@ function announceNewUser(room) {
 
 }
 
+function validatePseudo(pseudo, roomName) {
+	// verify that they entered something
+	if (!pseudo || pseudo.length==0) {
+		return 'Enter a pseudonym.';
+	}
 
+	// verify that the username is 3-140 char
+	else if (pseudo.length>140) {
+		return "Pseudonyms have to be fewer than 140 characters.";
+	}
+
+	// verify that username doesn't contain any bad chars
+	else if (regex.test(pseudo)) {
+		return "For now no spaces, letters a-z and numbers only. This will be more permissive soon.";
+	}
+
+	// check that username is unique in this room
+	else if(!isUsernameUnique(pseudo,roomName)) {
+		return "That pseudonym's already taken in this room.";
+	}
+
+	return null; 
+}
 
 function isUsernameUnique(username, roomName) {
-	//verify that username is unique
-	var roomClients = io.sockets.clients(roomName);
 	// search for the username
-	var filter = roomClients.filter(function(v){ return v["username"] == username; });
+	var filter = io.sockets.clients(roomName)
+		.filter(function(v) { 
+			return v["username"] == username; 
+		});
 	// if we return results, username is not unique
 	if (filter.length>0) {
 		return false;
