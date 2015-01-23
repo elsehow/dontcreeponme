@@ -88,7 +88,6 @@ io.sockets.on('connection', function(socket) {
   })
 })
 
-
 function joinRoom(socket, roomName) {
   // store chatroom in the session for this client
   socket.roomName = roomName
@@ -106,7 +105,6 @@ function joinRoom(socket, roomName) {
     socket.username + ' joins the room.'
   )
 }
-
 
 function leaveRoom(socket) {
   if (socket.roomName) {
@@ -134,7 +132,6 @@ function updateUserList(socket) {
     roomToUsernames[socket.roomName]
   )
 }
-
 
 function buildMessagePayload(pseudo, message) {
   return {

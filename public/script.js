@@ -57,11 +57,7 @@
 	my.socket.on('message', function(data) {
 
 		var from = data['pseudo'];
-		// don't show the message if it's from us
-		// we add the client's own messages on sentMessage() instead
-		if (from !== my.pseudonym) {
-			addMessage(data['message'], from, false);
-		}
+		addMessage(data['message'], from, false);
 
 		// increment unread message count if window's not in focus
 		if (!my.windowIsInFocus || !my.scrolledToBottom)  my.unreadMessageCount++;
@@ -84,7 +80,6 @@
 	function sentMessage() {
 		if (my.messageInput.val() != "") {
 			my.socket.emit('message',my.messageInput.val());
-			addMessage(my.messageInput.val(), my.pseudonym, false);
 			my.messageInput.val('');
 			my.submitButton.button('loading');
 			
