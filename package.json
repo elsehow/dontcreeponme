@@ -4,13 +4,12 @@
   "description": "chat app",
   "main": "server.js",
   "dependencies": {
-    "express": "~4.6.1",
-    "jade": "~1.4.2",
-    "socket.io": "~0.8.7",
-    "underscore": "~1.6.0",
-    "validator": "~3.26.0",
+    "express": "~4.11.1",
     "express-validator": "~2.7.0",
-    "sanitize-html": "~1.4.3"
+    "jade": "~1.9.1",
+    "lodash": "^2.4.1",
+    "sanitize-html": "~1.4.3",
+    "socket.io": "~1.3.2"
   },
   "devDependencies": {},
   "scripts": {

@@ -1,165 +1,173 @@
 // Libraries
 
-var express = require('express');
-var app = express();
+var express = require('express')
+var app = express()
 
-var http = require('http');
-var httpServer = http.createServer(app);
-var io = require('socket.io').listen(httpServer);
-var sanitizeHtml = require('sanitize-html');
+var http = require('http')
+var server = http.Server(app)
+var io = require('socket.io')(server)
+var sanitizeHtml = require('sanitize-html')
 
-var jade = require('jade');
-var _ = require('underscore');
+var jade = require('jade')
+var _ = require('lodash')
 
 // My stuff
-var appPort = 18696; //29420;
-var regex =  /[^a-zA-Z1-9]+/; // regular expression for validating usernames
+var appPort = 18696 //29420
 
 // Views Options
 
-app.set('views', __dirname + '/views');
-app.set('view engine', 'jade');
-app.set('view options', { layout: false });
-app.use(express.static(__dirname + '/public'));
-io.set('log level', 0);  
+app.set('views', __dirname + '/views')
+app.set('view engine', 'jade')
+app.set('view options', { layout: false })
+app.use(express.static(__dirname + '/public'))
+// io.set('log level', 0)
+
+server.listen(appPort)
+console.log('Server listening on port ' + appPort)
+
+// Express handlers
 
 // Render and send the main page
 app.get('/', function(req, res){
-  res.render('home.jade');
-});
+  res.render('home.jade')
+})
 
 // lazy handling for chatroom IDs.
 app.get('/:id', function(req, res) {
-	var id = req.params.id;
-	res.render('chat.jade', {roomName:id});
-});
+  res.render('chat.jade', 
+    {roomName: req.params.id}
+  )
+})
 
-httpServer.listen(appPort);
-console.log('Server listening on port ' + appPort);
+var roomToUsernames = {}
 
-// Handle the socket.io connections
+// socket.io handlers
 
-var global_users = 0; //count the global_users
+// First connection
+io.sockets.on('connection', function(socket) {
+  
+  socket.on('joinattempt', function(roomName, username, color) {
+    var validity = isUsernameValid(username, roomName)
+    if (validity.isValid) {
+      // store color in the session for this client
+      socket.color = color
+      // store username in the session for this client
+      socket.username = username
+      // tell user that they've been accepted
+      socket.emit(
+        'authresponse',
+        {status: 'ok'}
+      )
+      // tell room to reload users now that a new person's joined 
+      // room, username, is_join event
+      joinRoom(socket, roomName)
+    } else {
+      socket.emit(
+        'authresponse',
+        {status: validity.message}
+      )
+    }
+  })
 
-io.sockets.on('connection', function(socket) { // First connection
-	
-	global_users += 1; // Add 1 to the count
-	
-	socket.on('joinattempt', function(roomName, pseudo, color) {
+  // Broadcast the message to all
+  socket.on('message', function(data) {
+    io.sockets.in(socket.roomName).emit(
+      'message', 
+      buildMessagePayload(socket.username, data)
+    )
+  })
 
-		// verify that they entered something
-		if (!pseudo || pseudo.length==0) {
-			socket.emit('authresponse', 
-				{'status':'Enter a pseudonym.'});
-		}
+  // Disconnecton of the client
+  socket.on('leaveroom', function() {
+    leaveRoom(socket)
+  })
 
-		// verify that the username is 3-140 char
-		else if (pseudo.length>140) {
-			socket.emit('authresponse', 
-				{'status':"Pseudonyms have to be 1-140 characters. Sorry."});
-		}
+  // Disconnection of the client
+  socket.on('disconnect', function() {
+    leaveRoom(socket)
+  })
+})
 
-		// verify that username doesn't contain any bad chars
-		else if (regex.test(pseudo)) {
-			socket.emit('authresponse', 
-				{'status':"For now no spaces, letters a-z and numbers only. This will be more permissive soon."});
-		}
+function joinRoom(socket, roomName) {
+  // store chatroom in the session for this client
+  socket.roomName = roomName
 
-		// check that username is unique in this room
-		else if(!isUsernameUnique(pseudo,roomName)) {
-			socket.emit('authresponse', 
-				{'status':"That pseudonym's already taken in this room."});
-		}
+  // only at this point does the socket officially join the room.
+  socket.join(socket.roomName)
+  if (!(socket.roomName in roomToUsernames)) {
+    roomToUsernames[socket.roomName] = {}
+  }
+  roomToUsernames[socket.roomName][socket.username] = socket.color 
+  updateUserList(socket)
 
-		// if all's well, allow joining:
-		else {
-			//store color in the session for this client
-			socket.color = color;
-			//store username in the session for this client
-			socket.username = pseudo;
-			//store chatroom in the session for this client
-			socket.room = roomName;
-			// only at this point does the socket officially join the room.
-			socket.join(roomName);
-			// tell user that they've been accepted
-			socket.emit('authresponse', {'status':'ok'});
-			//tell room to reload users now that a new person's joined 
-			// room, username, is_join event
-			announceNewUser(socket.room, socket.username, true);
-		}
-	});
-
-	socket.on('message', function (data) { // Broadcast the message to all
-
-		//parse the message
-		var transmit = {pseudo : socket.username, message : sanitizeHtml(data, {
-  			allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'marquee', 'blink' ])
-		})}; 
-		io.sockets.in(socket.room).emit('message', transmit);
-
-	});
-
-	socket.on('leaveroom', function () { // Disconnection of the client
-		leaveRoom(socket);
-	});
-
-	socket.on('disconnect', function () { // Disconnection of the client
-		leaveRoom(socket);
-	});
-});
-
+  io.sockets.in(socket.roomName).emit(
+    'announcement', 
+    socket.username + ' joins the room.'
+  )
+}
 
 function leaveRoom(socket) {
-	global_users -= 1;
-        if (socket.room) {
-                  socket.leave(socket.room);
-                  announceNewUser(socket.room, socket.username, false);
-       }
+  if (socket.roomName) {
+    socket.leave(socket.roomName)
+
+    io.sockets.in(socket.roomName).emit(
+      'announcement', 
+      socket.username + ' leaves the room.'
+    )
+
+    delete roomToUsernames[socket.roomName][socket.username]
+    if (roomToUsernames[socket.roomName].size == 0) {
+      delete roomToUsernames[socket.roomName]
+    }
+    updateUserList(socket)
+
+    socket.roomName = null
+  }
 }
 
 // Send the list of users to everyone in the room
-// announce new user's name over chat too
-function announceNewUser(room) { 
-
-	var userlist = _.object(_.map(io.sockets.clients(room), function(o,v) {
-		try {
-			if (o.username) {	
-				return[o.username,o.color];
-			}
-		} catch(e) {}
-	}));
-
-	//send this list to the clients in the room	
-	io.sockets.in(room).emit('newuserlist',userlist);
-
-	//send a message to all users announcing the join
-	if (arguments[1]) {
-
-		var username = arguments[1];
-		var isConnectEvent = arguments[2];
-
-		var msg = username;
-
-		if (isConnectEvent) {
-			msg += " enters the room.";
-		} else {
-			msg += " leaves the room.";
-		}
-		io.sockets.in(room).emit('announcement', msg);
-	}
-
+function updateUserList(socket) {
+  io.sockets.in(socket.roomName).emit(
+    'newuserlist', 
+    roomToUsernames[socket.roomName]
+  )
 }
 
-
-
-function isUsernameUnique(username, roomName) {
-	//verify that username is unique
-	var roomClients = io.sockets.clients(roomName);
-	// search for the username
-	var filter = roomClients.filter(function(v){ return v["username"] == username; });
-	// if we return results, username is not unique
-	if (filter.length>0) {
-		return false;
-	} // otherwise it's unique
-	return true;
+function buildMessagePayload(pseudo, message) {
+  return {
+    pseudo: pseudo,
+    message: sanitizeHtml(
+      message,
+      {allowedTags: sanitizeHtml.defaults.allowedTags.concat(['marquee', 'blink'])}
+    )
+  }
 }
+
+var usernameRegex =  /[^a-zA-Z1-9]+/ // regular expression for validating usernames
+
+function isUsernameValid(username, roomName) {
+  var isValid = false
+  var message = ''
+
+  if (!username || username.length == 0) {
+    // pseudo must not be null or empty
+    message = 'Enter a pseudonym.'
+  } else if (username.length > 140) {
+    // username must be <= 140 characters long
+    message = 'Pseudonyms must be between 1 and 140 characters in length.'
+  } else if (usernameRegex.test(username)) {
+    // username must not contain bad characters
+    message = 'For now usernames may only contain the letters a-z and numbers. This will be more permissive soon.'
+  } else if (roomToUsernames[roomName] && username in roomToUsernames[roomName]) {
+    // username must be unique within this room
+    message = "That pseudonym's already taken in this room."
+  } else {
+    isValid = true
+  }
+
+  return {
+    isValid: isValid,
+    message: message
+  }
+}
+
