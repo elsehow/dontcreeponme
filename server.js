@@ -44,15 +44,13 @@ var roomToUsernames = {}
 
 // socket.io handlers
 
-// Handle the socket.io connections
-
 // First connection
 io.sockets.on('connection', function(socket) {
   
   socket.on('joinattempt', function(roomName, pseudo, color) {
     
     // if all's well, allow joining:
-    if (isUsernameValid(pseudo,roomName)) {
+    if (isUsernameValid(socket, pseudo,roomName)) {
       // store color in the session for this client
       socket.color = color
       // store username in the session for this client
@@ -144,7 +142,7 @@ function getMessagePayload(pseudo, message) {
   }
 }
 
-function isUsernameValid(pseudo, roomName) {
+function isUsernameValid(socket, pseudo, roomName) {
 
   // verify that they entered something
     if (!pseudo || pseudo.length==0) {

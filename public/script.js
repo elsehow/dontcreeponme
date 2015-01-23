@@ -83,8 +83,7 @@
 
 	function sentMessage() {
 		if (my.messageInput.val() != "") {
-			var send_message = my.messageInput.val()
-			my.socket.emit('message',send_message);
+			my.socket.emit('message',my.messageInput.val());
 			addMessage(send_message, my.pseudonym, false);
 			my.messageInput.val('');
 			my.submitButton.button('loading');
