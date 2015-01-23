@@ -102,7 +102,7 @@ io.sockets.on('connection', function(socket) {
     io.sockets.in(socket.roomName).emit('message', payload)
   })
 
-  // Disconnection of the client
+  // Disconnecton of the client
   socket.on('leaveroom', function() {
     leaveRoom(socket)
   })
@@ -122,7 +122,7 @@ function joinRoom(socket, roomName) {
   if (!(socket.roomName in roomToUsernames)) {
     roomToUsernames[socket.roomName] = {}
   }
-  roomToUsernames[socket.roomName][socket.username] = true
+  roomToUsernames[socket.roomName][socket.username] = socket.color 
   updateUserList(socket)
 
   var message = socket.username + ' joins the room.'
@@ -149,24 +149,8 @@ function leaveRoom(socket) {
 
 // Send the list of users to everyone in the room
 function updateUserList(socket) {
-  var roomId = socket.rooms[0]
-
-  var userlist = _.zipObject(
-    _.map(
-      // Object {socket id => socket}
-      io.sockets.adapter.rooms[roomId],
-      function(sock, sockId, collection) {
-        console.log('this is the individual socket')
-        console.log(sock)
-        if (sock.username && sock.color) {
-          return [sock.username, sock.color]
-        }
-      }
-    )
+  io.sockets.in(socket.roomName).emit(
+    'newuserlist', 
+    roomToUsernames[socket.roomName]
   )
-
-  console.log(userlist)
-
-  // send this list to the clients in the room
-  io.sockets.in(socket.roomName).emit('newuserlist', userlist)
 }
