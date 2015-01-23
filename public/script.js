@@ -14,16 +14,16 @@
 	my.notificationSound = new Audio('notify.ogg');
 	my.roomName = document.location.pathname.split('/')[1];
 
+	my.messageInput = $('#messageInput');
+	my.submitButton = $("#submit");
+	my.conversationContainer = $("#chatEntries")
+
 	windowFocusInit();
 	window.setInterval(setTimeAgo, 1000*10);
 
-	my.messageInput = $('#messageInput');
-	my.submitButton = $("#submit");
-
-	// setup interface for eliciting user's handle
-	my.conversationContainer = $("#chatEntries")
-	my.conversationContainer.empty();	
-	$('#chatURL').val('dontcreepon.me'.concat(document.location.pathname));
+	// my.conversationContainer.empty();	
+	$('#chatURL').val('https://dontcreepon.me/'.concat(my.roomName));
+	setupColorPicker();
 	showModalInterface();
 
 	// set focus to message input on all mouseup
@@ -31,7 +31,6 @@
 		my.messageInput.focus()
 	})
 
-	setupColorPicker();
 	setupScrollListener();
 	my.submitButton.click(function() {sentMessage();});
 
@@ -39,7 +38,7 @@
 
 
 	// ```````````````````````````
-	// set up socket listeners
+	// socket listeners
 	// ,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
 	// socket.on('connect', function() {
@@ -51,7 +50,7 @@
 	});
 
 	my.socket.on('announcement', function(data) {
-		addMessage(data, '', false, true);
+		addMessage(data, '', true);
 
 	});
 
@@ -61,7 +60,7 @@
 		// don't show the message if it's from us
 		// we add the client's own messages on sentMessage() instead
 		if (from !== my.pseudonym) {
-			addMessage(data['message'], from, false, false);
+			addMessage(data['message'], from, false);
 		}
 
 		// increment unread message count if window's not in focus
@@ -86,7 +85,7 @@
 		if (my.messageInput.val() != "") {
 			var send_message = my.messageInput.val()
 			my.socket.emit('message',send_message);
-			addMessage(send_message, my.pseudonym, true, false);
+			addMessage(send_message, my.pseudonym, false);
 			my.messageInput.val('');
 			my.submitButton.button('loading');
 			
@@ -103,8 +102,9 @@
 
 			if (username) {
 				count++;
-				var user_text = $('<span>' + username + ' </span>').css('color','#'+color);
-				userlistDiv.append(user_text);
+				userlistDiv.append(
+					$('<span>' + username + ' </span>').css('color','#'+color)
+				);
 			}
 
 		});
@@ -112,9 +112,13 @@
 	}
 
 
-	function addMessage(msg, pseudo, fromSelf, isAnnouncement) {
+	function addMessage(msg, pseudo, isAnnouncement) {
 
 		var date = new Date().toISOString();
+
+		var fromSelf = false;
+		if (pseudo === my.pseudonym)
+			fromSelf = true
 
 		//check msg for links
 		msg = replaceURLWithHTMLLinks(msg);
@@ -126,16 +130,10 @@
 		// and the messages came close together
 		// append it to the div of the last message
 		if ((pseudo === my.last_message_pseudo) && (new Date(date) - new Date(my.last_message_date) < 50000)) {
-			// get the last div
-			var last_msg = $( "#chatEntries .message").last();
-			last_msg.append("<p>" + msg + "</p>");
-			// returns at most 1 image or video
-			msg = pullImagesFromLinks(msg, last_msg);
-			// adjust the height of the color bar
-			last_msg.children('.msgcolor').css('height',last_msg.height()-14)
+			appendToMostRecentMessage(msg)
 		}
 
-		// if not, add a new message to the div
+		// if not, add a new message div to the conatiner 
 		else {
 			$div = createMessageDiv(msg, pseudo, date, fromSelf, isAnnouncement)
 			my.conversationContainer.append($div);
@@ -176,6 +174,17 @@
 
 		return $div
 
+	}
+
+	function appendToMostRecentMessage(msg) {
+		// get the last div
+		var $last_message = $( "#chatEntries .message").last();
+		$last_message.append("<p>" + msg + "</p>");
+		// returns at most 1 image or video
+		msg = pullImagesFromLinks(msg, $last_message);
+		// adjust the height of the color bar
+		$last_message.children('.msgcolor').css('height',$last_message.height()-14)
+		return $last_message
 	}
 
 	function enterChatroom(proposed_username) {
