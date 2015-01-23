@@ -1,165 +1,172 @@
 // Libraries
 
-var express = require('express');
-var app = express();
+var express = require('express')
+var app = express()
 
-var http = require('http');
-var httpServer = http.createServer(app);
-var io = require('socket.io').listen(httpServer);
-var sanitizeHtml = require('sanitize-html');
+var http = require('http')
+var server = http.Server(app)
+var io = require('socket.io')(server)
+var sanitizeHtml = require('sanitize-html')
 
-var jade = require('jade');
-var _ = require('underscore');
+var jade = require('jade')
+var _ = require('lodash')
 
 // My stuff
-var appPort = 18696; //29420;
-var regex =  /[^a-zA-Z1-9]+/; // regular expression for validating usernames
+var appPort = 18696 //29420
+var regex =  /[^a-zA-Z1-9]+/ // regular expression for validating usernames
 
 // Views Options
 
-app.set('views', __dirname + '/views');
-app.set('view engine', 'jade');
-app.set('view options', { layout: false });
-app.use(express.static(__dirname + '/public'));
-io.set('log level', 0);  
+app.set('views', __dirname + '/views')
+app.set('view engine', 'jade')
+app.set('view options', { layout: false })
+app.use(express.static(__dirname + '/public'))
+// io.set('log level', 0)
+
+server.listen(appPort)
+console.log('Server listening on port ' + appPort)
+
+// Express handlers
 
 // Render and send the main page
 app.get('/', function(req, res){
-  res.render('home.jade');
-});
+  res.render('home.jade')
+})
 
 // lazy handling for chatroom IDs.
 app.get('/:id', function(req, res) {
-	var id = req.params.id;
-	res.render('chat.jade', {roomName:id});
-});
+  var id = req.params.id
+  res.render('chat.jade', {roomName:id})
+})
 
-httpServer.listen(appPort);
-console.log('Server listening on port ' + appPort);
+var roomToUsernames = {}
+
+// socket.io handlers
 
 // Handle the socket.io connections
 
-var global_users = 0; //count the global_users
+// First connection
+io.sockets.on('connection', function(socket) {
+  
+  socket.on('joinattempt', function(roomName, pseudo, color) {
+    // verify that they entered something
+    if (!pseudo || pseudo.length==0) {
+      socket.emit('authresponse', 
+        {'status':'Enter a pseudonym.'})
+    }
 
-io.sockets.on('connection', function(socket) { // First connection
-	
-	global_users += 1; // Add 1 to the count
-	
-	socket.on('joinattempt', function(roomName, pseudo, color) {
+    // verify that the username is 3-140 char
+    else if (pseudo.length>140) {
+      socket.emit('authresponse', 
+        {'status':"Pseudonyms have to be 1-140 characters. Sorry."})
+    }
 
-		// verify that they entered something
-		if (!pseudo || pseudo.length==0) {
-			socket.emit('authresponse', 
-				{'status':'Enter a pseudonym.'});
-		}
+    // verify that username doesn't contain any bad chars
+    else if (regex.test(pseudo)) {
+      socket.emit('authresponse', 
+        {'status':"For now no spaces, letters a-z and numbers only. This will be more permissive soon."})
+    }
 
-		// verify that the username is 3-140 char
-		else if (pseudo.length>140) {
-			socket.emit('authresponse', 
-				{'status':"Pseudonyms have to be 1-140 characters. Sorry."});
-		}
+    // check that username is unique in this room
+    else if (roomToUsernames[roomName] && pseudo in roomToUsernames[roomName]) {
+      socket.emit('authresponse', 
+        {'status':"That pseudonym's already taken in this room."})
+    }
 
-		// verify that username doesn't contain any bad chars
-		else if (regex.test(pseudo)) {
-			socket.emit('authresponse', 
-				{'status':"For now no spaces, letters a-z and numbers only. This will be more permissive soon."});
-		}
+    // if all's well, allow joining:
+    else {
+      // store color in the session for this client
+      socket.color = color
+      // store username in the session for this client
+      socket.username = pseudo
+      // tell user that they've been accepted
+      socket.emit('authresponse', {'status':'ok'})
+      // tell room to reload users now that a new person's joined 
+      // room, username, is_join event
+      joinRoom(socket, roomName)
+    }
+  })
 
-		// check that username is unique in this room
-		else if(!isUsernameUnique(pseudo,roomName)) {
-			socket.emit('authresponse', 
-				{'status':"That pseudonym's already taken in this room."});
-		}
+  // Broadcast the message to all
+  socket.on('message', function(data) {
+    var payload = {
+      pseudo: socket.username,
+      message: sanitizeHtml(
+        data,
+        {
+          allowedTags: sanitizeHtml.defaults.allowedTags.concat(['marquee', 'blink'])
+        }
+      )
+    }
 
-		// if all's well, allow joining:
-		else {
-			//store color in the session for this client
-			socket.color = color;
-			//store username in the session for this client
-			socket.username = pseudo;
-			//store chatroom in the session for this client
-			socket.room = roomName;
-			// only at this point does the socket officially join the room.
-			socket.join(roomName);
-			// tell user that they've been accepted
-			socket.emit('authresponse', {'status':'ok'});
-			//tell room to reload users now that a new person's joined 
-			// room, username, is_join event
-			announceNewUser(socket.room, socket.username, true);
-		}
-	});
+    io.sockets.in(socket.roomName).emit('message', payload)
+  })
 
-	socket.on('message', function (data) { // Broadcast the message to all
+  // Disconnection of the client
+  socket.on('leaveroom', function() {
+    leaveRoom(socket)
+  })
 
-		//parse the message
-		var transmit = {pseudo : socket.username, message : sanitizeHtml(data, {
-  			allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'marquee', 'blink' ])
-		})}; 
-		io.sockets.in(socket.room).emit('message', transmit);
+  // Disconnection of the client
+  socket.on('disconnect', function() {
+    leaveRoom(socket)
+  })
+})
 
-	});
+function joinRoom(socket, roomName) {
+  // store chatroom in the session for this client
+  socket.roomName = roomName
 
-	socket.on('leaveroom', function () { // Disconnection of the client
-		leaveRoom(socket);
-	});
+  // only at this point does the socket officially join the room.
+  socket.join(socket.roomName)
+  if (!(socket.roomName in roomToUsernames)) {
+    roomToUsernames[socket.roomName] = {}
+  }
+  roomToUsernames[socket.roomName][socket.username] = true
+  updateUserList(socket)
 
-	socket.on('disconnect', function () { // Disconnection of the client
-		leaveRoom(socket);
-	});
-});
+  var message = socket.username + ' joins the room.'
+  io.sockets.in(socket.roomName).emit('announcement', message)
+}
 
 
 function leaveRoom(socket) {
-	global_users -= 1;
-        if (socket.room) {
-                  socket.leave(socket.room);
-                  announceNewUser(socket.room, socket.username, false);
-       }
+  if (socket.roomName) {
+    socket.leave(socket.roomName)
+
+    var message = socket.username + ' leaves the room.'
+    io.sockets.in(socket.roomName).emit('announcement', message)
+
+    delete roomToUsernames[socket.roomName][socket.username]
+    if (roomToUsernames[socket.roomName].size == 0) {
+      delete roomToUsernames[socket.roomName]
+    }
+    updateUserList(socket)
+
+    socket.roomName = null
+  }
 }
 
 // Send the list of users to everyone in the room
-// announce new user's name over chat too
-function announceNewUser(room) { 
+function updateUserList(socket) {
+  var roomId = socket.rooms[0]
 
-	var userlist = _.object(_.map(io.sockets.clients(room), function(o,v) {
-		try {
-			if (o.username) {	
-				return[o.username,o.color];
-			}
-		} catch(e) {}
-	}));
+  var userlist = _.zipObject(
+    _.map(
+      // Object {socket id => socket}
+      io.sockets.adapter.rooms[roomId],
+      function(sock, sockId, collection) {
+        console.log('this is the individual socket')
+        console.log(sock)
+        if (sock.username && sock.color) {
+          return [sock.username, sock.color]
+        }
+      }
+    )
+  )
 
-	//send this list to the clients in the room	
-	io.sockets.in(room).emit('newuserlist',userlist);
+  console.log(userlist)
 
-	//send a message to all users announcing the join
-	if (arguments[1]) {
-
-		var username = arguments[1];
-		var isConnectEvent = arguments[2];
-
-		var msg = username;
-
-		if (isConnectEvent) {
-			msg += " enters the room.";
-		} else {
-			msg += " leaves the room.";
-		}
-		io.sockets.in(room).emit('announcement', msg);
-	}
-
-}
-
-
-
-function isUsernameUnique(username, roomName) {
-	//verify that username is unique
-	var roomClients = io.sockets.clients(roomName);
-	// search for the username
-	var filter = roomClients.filter(function(v){ return v["username"] == username; });
-	// if we return results, username is not unique
-	if (filter.length>0) {
-		return false;
-	} // otherwise it's unique
-	return true;
+  // send this list to the clients in the room
+  io.sockets.in(socket.roomName).emit('newuserlist', userlist)
 }
