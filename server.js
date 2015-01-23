@@ -13,7 +13,6 @@ var _ = require('lodash')
 
 // My stuff
 var appPort = 18696 //29420
-var regex =  /[^a-zA-Z1-9]+/ // regular expression for validating usernames
 
 // Views Options
 
@@ -47,19 +46,26 @@ var roomToUsernames = {}
 // First connection
 io.sockets.on('connection', function(socket) {
   
-  socket.on('joinattempt', function(roomName, pseudo, color) {
-    
-    // if all's well, allow joining:
-    if (isUsernameValid(socket, pseudo,roomName)) {
+  socket.on('joinattempt', function(roomName, username, color) {
+    var validity = isUsernameValid(username, roomName)
+    if (validity.isValid) {
       // store color in the session for this client
       socket.color = color
       // store username in the session for this client
-      socket.username = pseudo
+      socket.username = username
       // tell user that they've been accepted
-      socket.emit('authresponse', {'status':'ok'})
+      socket.emit(
+        'authresponse',
+        {status: 'ok'}
+      )
       // tell room to reload users now that a new person's joined 
       // room, username, is_join event
       joinRoom(socket, roomName)
+    } else {
+      socket.emit(
+        'authresponse',
+        {status: validity.message}
+      )
     }
   })
 
@@ -67,7 +73,7 @@ io.sockets.on('connection', function(socket) {
   socket.on('message', function(data) {
     io.sockets.in(socket.roomName).emit(
       'message', 
-      getMessagePayload(socket.username, data)
+      buildMessagePayload(socket.username, data)
     )
   })
 
@@ -130,48 +136,41 @@ function updateUserList(socket) {
 }
 
 
-function getMessagePayload(pseudo, message) {
+function buildMessagePayload(pseudo, message) {
   return {
     pseudo: pseudo,
     message: sanitizeHtml(
       message,
-      {
-        allowedTags: sanitizeHtml.defaults.allowedTags.concat(['marquee', 'blink'])
-      }
+      {allowedTags: sanitizeHtml.defaults.allowedTags.concat(['marquee', 'blink'])}
     )
   }
 }
 
-function isUsernameValid(socket, pseudo, roomName) {
+var usernameRegex =  /[^a-zA-Z1-9]+/ // regular expression for validating usernames
 
-  // verify that they entered something
-    if (!pseudo || pseudo.length==0) {
-      socket.emit('authresponse', 
-        {'status':'Enter a pseudonym.'})
-      return false
-    }
+function isUsernameValid(username, roomName) {
+  var isValid = false
+  var message = ''
 
-    // verify that the username is 3-140 char
-    else if (pseudo.length>140) {
-      socket.emit('authresponse', 
-        {'status':"Pseudonyms have to be 1-140 characters. Sorry."})
-      return false
-    }
+  if (!username || username.length == 0) {
+    // pseudo must not be null or empty
+    message = 'Enter a pseudonym.'
+  } else if (username.length > 140) {
+    // username must be <= 140 characters long
+    message = 'Pseudonyms must be between 1 and 140 characters in length.'
+  } else if (usernameRegex.test(username)) {
+    // username must not contain bad characters
+    message = 'For now usernames may only contain the letters a-z and numbers. This will be more permissive soon.'
+  } else if (roomToUsernames[roomName] && username in roomToUsernames[roomName]) {
+    // username must be unique within this room
+    message = "That pseudonym's already taken in this room."
+  } else {
+    isValid = true
+  }
 
-    // verify that username doesn't contain any bad chars
-    else if (regex.test(pseudo)) {
-      socket.emit('authresponse', 
-        {'status':"For now no spaces, letters a-z and numbers only. This will be more permissive soon."})
-      return false
-    }
-
-    // check that username is unique in this room
-    else if (roomToUsernames[roomName] && pseudo in roomToUsernames[roomName]) {
-      socket.emit('authresponse', 
-        {'status':"That pseudonym's already taken in this room."})
-      return false
-    }
-    return true
-
+  return {
+    isValid: isValid,
+    message: message
+  }
 }
 
