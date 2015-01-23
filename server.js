@@ -35,8 +35,9 @@ app.get('/', function(req, res){
 
 // lazy handling for chatroom IDs.
 app.get('/:id', function(req, res) {
-  var id = req.params.id
-  res.render('chat.jade', {roomName:id})
+  res.render('chat.jade', 
+    {roomName: req.params.id}
+  )
 })
 
 var roomToUsernames = {}
@@ -49,32 +50,9 @@ var roomToUsernames = {}
 io.sockets.on('connection', function(socket) {
   
   socket.on('joinattempt', function(roomName, pseudo, color) {
-    // verify that they entered something
-    if (!pseudo || pseudo.length==0) {
-      socket.emit('authresponse', 
-        {'status':'Enter a pseudonym.'})
-    }
-
-    // verify that the username is 3-140 char
-    else if (pseudo.length>140) {
-      socket.emit('authresponse', 
-        {'status':"Pseudonyms have to be 1-140 characters. Sorry."})
-    }
-
-    // verify that username doesn't contain any bad chars
-    else if (regex.test(pseudo)) {
-      socket.emit('authresponse', 
-        {'status':"For now no spaces, letters a-z and numbers only. This will be more permissive soon."})
-    }
-
-    // check that username is unique in this room
-    else if (roomToUsernames[roomName] && pseudo in roomToUsernames[roomName]) {
-      socket.emit('authresponse', 
-        {'status':"That pseudonym's already taken in this room."})
-    }
-
+    
     // if all's well, allow joining:
-    else {
+    if (isUsernameValid(pseudo,roomName)) {
       // store color in the session for this client
       socket.color = color
       // store username in the session for this client
@@ -89,17 +67,10 @@ io.sockets.on('connection', function(socket) {
 
   // Broadcast the message to all
   socket.on('message', function(data) {
-    var payload = {
-      pseudo: socket.username,
-      message: sanitizeHtml(
-        data,
-        {
-          allowedTags: sanitizeHtml.defaults.allowedTags.concat(['marquee', 'blink'])
-        }
-      )
-    }
-
-    io.sockets.in(socket.roomName).emit('message', payload)
+    io.sockets.in(socket.roomName).emit(
+      'message', 
+      getMessagePayload(socket.username, data)
+    )
   })
 
   // Disconnecton of the client
@@ -113,6 +84,7 @@ io.sockets.on('connection', function(socket) {
   })
 })
 
+
 function joinRoom(socket, roomName) {
   // store chatroom in the session for this client
   socket.roomName = roomName
@@ -125,8 +97,10 @@ function joinRoom(socket, roomName) {
   roomToUsernames[socket.roomName][socket.username] = socket.color 
   updateUserList(socket)
 
-  var message = socket.username + ' joins the room.'
-  io.sockets.in(socket.roomName).emit('announcement', message)
+  io.sockets.in(socket.roomName).emit(
+    'announcement', 
+    socket.username + ' joins the room.'
+  )
 }
 
 
@@ -134,8 +108,10 @@ function leaveRoom(socket) {
   if (socket.roomName) {
     socket.leave(socket.roomName)
 
-    var message = socket.username + ' leaves the room.'
-    io.sockets.in(socket.roomName).emit('announcement', message)
+    io.sockets.in(socket.roomName).emit(
+      'announcement', 
+      socket.username + ' leaves the room.'
+    )
 
     delete roomToUsernames[socket.roomName][socket.username]
     if (roomToUsernames[socket.roomName].size == 0) {
@@ -154,3 +130,50 @@ function updateUserList(socket) {
     roomToUsernames[socket.roomName]
   )
 }
+
+
+function getMessagePayload(pseudo, message) {
+  return {
+    pseudo: pseudo,
+    message: sanitizeHtml(
+      message,
+      {
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat(['marquee', 'blink'])
+      }
+    )
+  }
+}
+
+function isUsernameValid(pseudo, roomName) {
+
+  // verify that they entered something
+    if (!pseudo || pseudo.length==0) {
+      socket.emit('authresponse', 
+        {'status':'Enter a pseudonym.'})
+      return false
+    }
+
+    // verify that the username is 3-140 char
+    else if (pseudo.length>140) {
+      socket.emit('authresponse', 
+        {'status':"Pseudonyms have to be 1-140 characters. Sorry."})
+      return false
+    }
+
+    // verify that username doesn't contain any bad chars
+    else if (regex.test(pseudo)) {
+      socket.emit('authresponse', 
+        {'status':"For now no spaces, letters a-z and numbers only. This will be more permissive soon."})
+      return false
+    }
+
+    // check that username is unique in this room
+    else if (roomToUsernames[roomName] && pseudo in roomToUsernames[roomName]) {
+      socket.emit('authresponse', 
+        {'status':"That pseudonym's already taken in this room."})
+      return false
+    }
+    return true
+
+}
+
