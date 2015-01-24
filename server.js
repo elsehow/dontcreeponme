@@ -14,10 +14,8 @@ var path         = require('path')
 // Express
 app.set('port', process.env.PORT || 18696) // 29420
 app.set('view engine', 'jade')
-// app.set('views', __dirname + '/views')
 app.set('view options', {layout: false})
-app.use(express.static(path.join(__dirname + '/public')))
-// io.set('log level', 0)
+app.use(express.static(path.join(__dirname, 'public')))
 
 
 // Actually start the app
