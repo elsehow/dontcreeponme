@@ -31,7 +31,8 @@ app.get('/', function(req, res) {
 
 app.get('/:id', function(req, res) {
   // lazy handling for chatroom IDs.
-  res.render('chat', 
+  res.render(
+    'chat',
     {roomName: req.params.id}
   )
 })

@@ -1,111 +1,93 @@
-doctype html(lang='en')
-html
-  head
-    meta(charset='utf-8')
-    meta(http-equiv='X-UA-Compatible', content='IE=edge')
-    meta(name='viewport', content='width=device-width, initial-scale=1')
-    meta(name='description', content='')
-    meta(name='author', content='ffff')
-    title Don&apos;t creep on me!
-    // Bootstrap Core CSS
-    link(rel='stylesheet', type='text/css', href='/css/custom-bootstrap.min.css')
-    // Custom CSS
-    link(href='/css/splashpage.css', rel='stylesheet')
-    // Custom Fonts
-    link(rel='stylesheet', type='text/css', href='//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css')
-    link(rel='stylesheet', type='text/css', href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic')
-    link(rel='stylesheet', type='text/css', href='//fonts.googleapis.com/css?family=Montserrat:400,700')
-    // HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries
-    // WARNING: Respond.js doesn't work if you view the page via file://
-    //if lt IE 9
-      script(src='//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js')
-      |         
-      script(src='//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js')
-  body#page-top(data-spy='scroll', data-target='.navbar-fixed-top')
-    // Navigation
-    nav.navbar.navbar-custom.navbar-fixed-top(role='navigation')
-      .container
-        .navbar-header
-          button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-main-collapse')
-            i.fa.fa-bars
-          |                 
-          a.navbar-brand.page-scroll(href='#page-top')
-            i.fa.fa-circle-o
-            |   
-            span.light Don&apos;t
-            |  Creep 
-            span.light On Me 
-        // Collect the nav links, forms, and other content for toggling
-        .collapse.navbar-collapse.navbar-right.navbar-main-collapse
-          ul.nav.navbar-nav
-            // Hidden li included to remove active class from about link when scrolled up past about section
-            li.hidden
-              a(href='#page-top')
-            |                     
-            li
-              a.page-scroll(href='#about') learn more
-        // /.navbar-collapse
-      // /.container
-    // Intro Header
-    header.intro
-        .container
-          .row
-            .col-md-3.col-sm-4
-              span.btn.btn-circle.logo  
-            |                     
-            .col-md-6.col-sm-6.col-sm-offset-1.col-md-offset-1.col-lg-offset-0
-              h1 Chat without leaving a trace
-              |                        
-              p
-                input.btn.btn-default.btn-lg#chatroomName.input(placeholder='room name' autofocus)
-                |                         
-                a.btn.btn-default.btn-lg#joinChatroom(onclick='joinChatroom()') Join 
-                |                         
-              .alert.alert-dismissable.alert-danger(style="display:none")
-              p
-                | Off-the-record chat with no signups. Just enter a room name above, and you'll get a link with which you can invite your friends. You are not being tracked. 
-                a.page-scroll(href='#about') Learn more...
-    // About Section
-    section#about.about
-      .intro-body
-        .container
-          .row
-            .col-md-8.col-md-offset-2
-              h1 Private, real-time chat for anyone with a web browser.
-              |                     
-              p
-                | Messages are sent to people who are in the same room at the same time - then discarded, forever.
-              |                     
-              p We do not store messages on our servers. We do not track you in any way.
-    // tryit Section
-    section#tryit.tryit
-      .intro-body
-        .container
-          .row
-            .col-md-8.col-md-offset-2
-              h2
-                i.fa.fa-eye-slash
-                |  Nothing logged
-              |                         
-              p
-                | Messages go to people who are in a room with you at the time you sent. We never log messages on our server.
-              h2
-                i.fa.fa-ban
-                |  No tracking
-              |                         
-              p
-                | We require no signups or accounts, and we do not track you in any way.
-              h2
-                i.fa.fa-key
-                |  End-to-end encryption
-              |                         
-              p
-                | Your data is encrypted from the moment you send your message to the moment its received by your friends.
-          |                 
-          .row(style='padding-top:60px;')
-            .col-md-8.col-md-offset-2
-              small Copyright &copy; dontcreepon.me 2015.
+extends ./base
 
-    script(src='//code.jquery.com/jquery-1.9.1.min.js')
-    script(src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js')
-    script(src='/js/homepage.js')
+
+block meta
+  meta(http-equiv='X-UA-Compatible', content='IE=edge')
+  meta(name='viewport', content='width=device-width, initial-scale=1')
+
+
+block title
+  title Don&apos;t creep on me!
+
+
+block stylesheets
+  link(rel='stylesheet', type='text/css', href='/css/splashpage.css')
+
+
+block content
+  //- Need to figure out another way to do this because the body element
+  //- belongs to the base template and generally shouldn't be fucked with.
+  //- Removing this doesn't appear to have done anything though so...
+  //- body#page-top(data-spy='scroll', data-target='.navbar-fixed-top')
+
+  //- Navigation
+  nav.navbar.navbar-custom.navbar-fixed-top(role='navigation')
+    .container
+      .navbar-header
+        button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-main-collapse')
+          i.fa.fa-bars
+        a.navbar-brand.page-scroll(href='#page-top')
+          i.fa.fa-circle-o
+          span.light &nbsp;Don&apos;t
+          | &nbsp;Creep&nbsp;
+          span.light On Me
+      //- Collect the nav links, forms, and other content for toggling
+      .collapse.navbar-collapse.navbar-right.navbar-main-collapse
+        ul.nav.navbar-nav
+          //- Hidden li included to remove active class from about link when scrolled up past about section
+          li.hidden
+            a(href='#page-top')
+          li
+            a.page-scroll(href='#about') learn more
+      //- /.navbar-collapse
+    //- /.container
+  //- Intro Header
+  header.intro
+      .container
+        .row
+          .col-md-3.col-sm-4
+            span.btn.btn-circle.logo
+          .col-md-6.col-sm-6.col-sm-offset-1.col-md-offset-1.col-lg-offset-0
+            h1 Chat without leaving a trace
+            p
+              input.btn.btn-default.btn-lg#chatroomName.input(placeholder='room name' autofocus)
+              | &nbsp;
+              a.btn.btn-default.btn-lg#joinChatroom(onclick='joinChatroom()') Join
+            .alert.alert-dismissable.alert-danger(style="display:none")
+            p
+              | Off-the-record chat with no signups. Just enter a room name above, and you'll get a link with which you can invite your friends. You are not being tracked. 
+              a.page-scroll(href='#about') Learn more...
+  //- About Section
+  section#about.about
+    .intro-body
+      .container
+        .row
+          .col-md-8.col-md-offset-2
+            h1 Private, real-time chat for anyone with a web browser.
+            p Messages are sent to people who are in the same room at the same time - then discarded, forever.
+            p We do not store messages on our servers. We do not track you in any way.
+  //- tryit Section
+  section#tryit.tryit
+    .intro-body
+      .container
+        .row
+          .col-md-8.col-md-offset-2
+            h2
+              i.fa.fa-eye-slash
+              |  Nothing logged
+            p Messages go to people who are in a room with you at the time you sent. We never log messages on our server.
+            h2
+              i.fa.fa-ban
+              |  No tracking
+            p We require no signups or accounts, and we do not track you in any way.
+            h2
+              i.fa.fa-key
+              |  End-to-end encryption
+            p Your data is encrypted from the moment you send your message to the moment its received by your friends.
+        .row(style='padding-top:60px;')
+          .col-md-8.col-md-offset-2
+            small Copyright &copy; dontcreepon.me 2015.
+
+
+block scripts
+  script(type='text/javascript', src='/js/homepage.js')

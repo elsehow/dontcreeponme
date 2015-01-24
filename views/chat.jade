@@ -1,60 +1,62 @@
-doctype html
-html
-	head
-		meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
-		meta(name='description', content='Instantly join off-the-record chatrooms. No accounts and no signups. Nothing is stored on our servers. You will not be tracked.')
-		meta(name='author', content='dontcreeponme')
-		title Don't Creep On Me! - Join room: #{roomName}
-		link(rel='stylesheet', type='text/css', href='/css/custom-bootstrap.min.css')
-		link(rel='stylesheet', type='text/css', href='/css/layout.css')
-		link(rel='stylesheet', type='text/css', href='/css/spectrum.css')
-		link(rel='stylesheet', type='text/css', href='//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css')
+extends ./base
 
-	body
-		audio(preload='auto')#notifySound
-			source(src='/audio/notify.ogg')
 
-		div.container
-			div.jumbotron#pickUsername
-				h2 Choose a pseudonym
-				.row
-					.col-md-10.col-lg-10.col-sm-10.col-xs-10.nopaddingRight
-						input(type='text')#pseudoInput
-					.col-md-2.col-lg-2.col-sm-2.col-xs-2.nopaddingLeft
-						input(id='colorpicker')
-				.row
-					.alert.alert-dismissable.alert-danger#alertPseudo(style='display:none')
-				.row
-					.col-md-10.col-lg-10.col-sm-10.col-xs-10.nopaddingRight
-						p 	You are about to enter an off-the-record chat. Only the people in the room at the time will recieve your messages. Nothing will be stored on our servers. You are not being tracked.
-				.row
-					.col-md-12.col-lg-12.col-sm-12.col-xs-12
-						strong Invite link - 
-						input.copybox#chatURL(onClick="selectAll('chatURL')" readonly)
-				.row
-					.col-md-6.col-lg-6.col-sm-6.col-xs-6.nopaddingRight
-						button.btn.btn-primary.btn-lg#pseudoSubmit Join
+block meta
+  meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
 
-			div.container#main(style="display:none")
-				.row
-					.col-xs-12.col-sm-10.col-sm-offset-1.col-md-8.col-lg-8.col-md-offset-2.col-lg-offset-2
-						#chatEntries
-				.row
-					.col-xs-11.col-sm-9.col-md-7.col-lg-7.nopaddingRight.col-sm-offset-1.col-md-offset-2.col-lg-offset-2
-						input(type='textarea')#messageInput
-					.col-md-1.col-lg-1.col-sm-1.col-xs-1.nopaddingLeft
-						button#submit(data-loading-text="Send") 
-							i.fa.fa-caret-right
-				.row
-					.col-xs-12.col-sm-10.col-sm-offset-1.col-md-8.col-lg-8.col-md-offset-2.col-lg-offset-2
-						.pull-left#userlistDiv
 
-			script(src='//code.jquery.com/jquery-1.9.1.min.js')
-			script(src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js')
-			script(src='//ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js')
-			script(src='/socket.io/socket.io.js')
-			script(src='/js/jquery.timeago.js')
-			script(src='/js/drop.js')
-			script(src='/js/spectrum.js')
-			script(src='/js/script.js')
-			//- script(src='/js/sjcl.js')
+block title
+  title Don't Creep On Me! - Join room: #{roomName}
+
+
+block stylesheets
+  link(rel='stylesheet', type='text/css', href='/css/layout.css')
+  link(rel='stylesheet', type='text/css', href='/css/spectrum.css')
+
+
+block content
+  audio(preload='auto')#notifySound
+    source(src='/audio/notify.ogg')
+
+  div.container
+    div.jumbotron#pickUsername
+      h2 Choose a pseudonym
+      .row
+        .col-md-10.col-lg-10.col-sm-10.col-xs-10.nopaddingRight
+          input(type='text')#pseudoInput
+        .col-md-2.col-lg-2.col-sm-2.col-xs-2.nopaddingLeft
+          input(id='colorpicker')
+      .row
+        .alert.alert-dismissable.alert-danger#alertPseudo(style='display:none')
+      .row
+        .col-md-10.col-lg-10.col-sm-10.col-xs-10.nopaddingRight
+          p   You are about to enter an off-the-record chat. Only the people in the room at the time will recieve your messages. Nothing will be stored on our servers. You are not being tracked.
+      .row
+        .col-md-12.col-lg-12.col-sm-12.col-xs-12
+          strong Invite link -
+          input.copybox#chatURL(onClick="selectAll('chatURL')" readonly)
+      .row
+        .col-md-6.col-lg-6.col-sm-6.col-xs-6.nopaddingRight
+          button.btn.btn-primary.btn-lg#pseudoSubmit Join
+
+    div.container#main(style="display:none")
+      .row
+        .col-xs-12.col-sm-10.col-sm-offset-1.col-md-8.col-lg-8.col-md-offset-2.col-lg-offset-2
+          #chatEntries
+      .row
+        .col-xs-11.col-sm-9.col-md-7.col-lg-7.nopaddingRight.col-sm-offset-1.col-md-offset-2.col-lg-offset-2
+          input(type='textarea')#messageInput
+        .col-md-1.col-lg-1.col-sm-1.col-xs-1.nopaddingLeft
+          button#submit(data-loading-text="Send")
+            i.fa.fa-caret-right
+      .row
+        .col-xs-12.col-sm-10.col-sm-offset-1.col-md-8.col-lg-8.col-md-offset-2.col-lg-offset-2
+          .pull-left#userlistDiv
+
+
+block scripts
+  script(type='text/javascript', src='/js/jquery.timeago.js')
+  script(type='text/javascript', src='/js/drop.js')
+  script(type='text/javascript', src='/js/spectrum.js')
+  script(type='text/javascript', src='/js/script.js')
+  //- script(type='text/javascript', src='/js/sjcl.js')
