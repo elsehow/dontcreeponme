@@ -1,40 +1,39 @@
-// Libraries
-
+// App
 var express = require('express')
-var app = express()
+  , app     = express()
+  , http    = require('http')
+  , server  = http.Server(app)
+  , io      = require('socket.io')(server)
 
-var http = require('http')
-var server = http.Server(app)
-var io = require('socket.io')(server)
-var sanitizeHtml = require('sanitize-html')
+// Libraries
+var path         = require('path')
+  , sanitizeHtml = require('sanitize-html')
+  , _            = require('lodash')
 
-var jade = require('jade')
-var _ = require('lodash')
 
-// My stuff
-var appPort = 18696 //29420
-
-// Views Options
-
-app.set('views', __dirname + '/views')
+// Express
+app.set('port', process.env.PORT || 18696) // 29420
 app.set('view engine', 'jade')
-app.set('view options', { layout: false })
-app.use(express.static(__dirname + '/public'))
+// app.set('views', __dirname + '/views')
+app.set('view options', {layout: false})
+app.use(express.static(path.join(__dirname + '/public')))
 // io.set('log level', 0)
 
-server.listen(appPort)
-console.log('Server listening on port ' + appPort)
 
-// Express handlers
+// Actually start the app
+server.listen(app.get('port'))
+console.log('Server listening on port ' + app.get('port'))
 
-// Render and send the main page
-app.get('/', function(req, res){
-  res.render('home.jade')
+
+// Routes
+app.get('/', function(req, res) {
+  // Render and send the main page
+  res.render('home')
 })
 
-// lazy handling for chatroom IDs.
 app.get('/:id', function(req, res) {
-  res.render('chat.jade', 
+  // lazy handling for chatroom IDs.
+  res.render('chat', 
     {roomName: req.params.id}
   )
 })

@@ -11,7 +11,7 @@
 	                ['#0002E8','#EB2FFF', '#FF730A'], ];
 	my.windowIsInFocus = true;
 	my.scrolledToBottom = true;
-	my.notificationSound = new Audio('notify.ogg');
+	my.notificationSound = new Audio('/audio/notify.ogg');
 	my.roomName = document.location.pathname.split('/')[1];
 
 	my.messageInput = $('#messageInput');

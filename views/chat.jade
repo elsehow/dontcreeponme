@@ -1,18 +1,18 @@
 doctype html
 html
 	head
-		meta(name="viewport", content="width=device-width, initial-scale=1, maximum-scale=1")
-		meta(name="description", content="Instantly join off-the-record chatrooms. No accounts and no signups. Nothing is stored on our servers. You will not be tracked.")
-		meta(name="author", content="dontcreeponme")
+		meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
+		meta(name='description', content='Instantly join off-the-record chatrooms. No accounts and no signups. Nothing is stored on our servers. You will not be tracked.')
+		meta(name='author', content='dontcreeponme')
 		title Don't Creep On Me! - Join room: #{roomName}
-		link(rel="stylesheet", href="layout.css")
-		link(rel="stylesheet", href="spectrum.css")
-		link(href='font-awesome/css/font-awesome.min.css', rel='stylesheet', type='text/css')
-		link(rel="stylesheet", href="bootstrap.min.css")
+		link(rel='stylesheet', type='text/css', href='/css/custom-bootstrap.min.css')
+		link(rel='stylesheet', type='text/css', href='/css/layout.css')
+		link(rel='stylesheet', type='text/css', href='/css/spectrum.css')
+		link(rel='stylesheet', type='text/css', href='//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css')
 
 	body
-		audio(preload="auto")#notifySound
-			source(src="notify.ogg")
+		audio(preload='auto')#notifySound
+			source(src='/audio/notify.ogg')
 
 		div.container
 			div.jumbotron#pickUsername
@@ -50,11 +50,11 @@ html
 						.pull-left#userlistDiv
 
 			script(src='//code.jquery.com/jquery-1.9.1.min.js')
-			script(src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js")
-			script(src='/jquery.timeago.js')
+			script(src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js')
 			script(src='//ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js')
-			script(src="/drop.js")
-			script(src="/spectrum.js")
-			script(src="/socket.io/socket.io.js")
-			//- script(src="/sjcl.js")
-			script(src="/script.js")
+			script(src='/socket.io/socket.io.js')
+			script(src='/js/jquery.timeago.js')
+			script(src='/js/drop.js')
+			script(src='/js/spectrum.js')
+			script(src='/js/script.js')
+			//- script(src='/js/sjcl.js')

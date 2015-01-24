@@ -1,26 +1,20 @@
 doctype html(lang='en')
-head
+html
+  head
     meta(charset='utf-8')
-    |     
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
-    |     
     meta(name='viewport', content='width=device-width, initial-scale=1')
-    |     
     meta(name='description', content='')
-    |     
     meta(name='author', content='ffff')
-    |     
     title Don&apos;t creep on me!
     // Bootstrap Core CSS
-    link(href='bootstrap.min.css', rel='stylesheet')
+    link(rel='stylesheet', type='text/css', href='/css/custom-bootstrap.min.css')
     // Custom CSS
-    link(href='splashpage.css', rel='stylesheet')
+    link(href='/css/splashpage.css', rel='stylesheet')
     // Custom Fonts
-    link(href='font-awesome/css/font-awesome.min.css', rel='stylesheet', type='text/css')
-    |     
-    link(href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic', rel='stylesheet', type='text/css')
-    |     
-    link(href='//fonts.googleapis.com/css?family=Montserrat:400,700', rel='stylesheet', type='text/css')
+    link(rel='stylesheet', type='text/css', href='//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css')
+    link(rel='stylesheet', type='text/css', href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic')
+    link(rel='stylesheet', type='text/css', href='//fonts.googleapis.com/css?family=Montserrat:400,700')
     // HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries
     // WARNING: Respond.js doesn't work if you view the page via file://
     //if lt IE 9
@@ -113,5 +107,5 @@ head
               small Copyright &copy; dontcreepon.me 2015.
 
     script(src='//code.jquery.com/jquery-1.9.1.min.js')
-    script(src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js')
-    script(src='homepage.js')
+    script(src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js')
+    script(src='/js/homepage.js')

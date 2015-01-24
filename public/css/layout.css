@@ -150,7 +150,7 @@ button {
 
 
 .encrypted {
-  background-image: url("key.png");
+  background-image: url('/img/key.png');
   background-repeat: no-repeat;
   background-position: right top;
 }
