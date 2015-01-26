@@ -44,13 +44,13 @@ var roomToUsernames = {}
 // First connection
 io.sockets.on('connection', function(socket) {
   
-  socket.on('joinattempt', function(roomName, username, color) {
-    var validity = isUsernameValid(username, roomName)
+  socket.on('joinattempt', function(data) {
+    var validity = isUsernameValid(data.username, data.room)
     if (validity.isValid) {
       // store color in the session for this client
-      socket.color = color
+      socket.color = data.color
       // store username in the session for this client
-      socket.username = username
+      socket.username = data.username
       // tell user that they've been accepted
       socket.emit(
         'authresponse',
@@ -58,7 +58,7 @@ io.sockets.on('connection', function(socket) {
       )
       // tell room to reload users now that a new person's joined 
       // room, username, is_join event
-      joinRoom(socket, roomName)
+      joinRoom(socket, data.room)
     } else {
       socket.emit(
         'authresponse',

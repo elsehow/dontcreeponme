@@ -248,7 +248,15 @@
 
 			// get the user's selected color & username
 			my.color = $('#colorpicker').spectrum('get');
-			my.socket.emit('joinattempt', my.roomName, proposed_username, my.color.toHex());
+
+			my.socket.emit(
+				'joinattempt',
+				{
+					room: my.roomName,
+					username: proposed_username,
+					color: my.color.toHex()
+				}
+			);
 			
 			my.socket.on('authresponse', function(data){
 				if(data.status == "ok")
