@@ -55,7 +55,7 @@ block content
               a.btn.btn-default.btn-lg#joinChatroom(onclick='joinChatroom()') Join
             .alert.alert-dismissable.alert-danger(style="display:none")
             p
-              | Off-the-record chat with no signups. Just enter a room name above, and you'll get a link with which you can invite your friends. You are not being tracked. 
+              | Just enter a room name above, and send the generated URL to your friends. You are not being tracked. 
               a.page-scroll(href='#about') Learn more...
   //- About Section
   section#about.about
@@ -63,7 +63,7 @@ block content
       .container
         .row
           .col-md-8.col-md-offset-2
-            h1 Private, real-time chat for anyone with a web browser.
+            h1 Pseudonymous, real-time chat for anyone with a web browser.
             p Messages are sent to people who are in the same room at the same time - then discarded, forever.
             p We do not store messages on our servers. We do not track you in any way.
   //- tryit Section
@@ -82,8 +82,8 @@ block content
             p We require no signups or accounts, and we do not track you in any way.
             h2
               i.fa.fa-key
-              |  End-to-end encryption
-            p Your data is encrypted from the moment you send your message to the moment its received by your friends.
+              |  Open source
+            p Read the source #[a(href="http://github.com/elsehow/dontcreeponme") here].
         .row(style='padding-top:60px;')
           .col-md-8.col-md-offset-2
             small Copyright &copy; dontcreepon.me 2015.
