@@ -28,7 +28,7 @@ windowFocusInit();
 window.setInterval(setTimeAgo, 1000*10);
 
 // my.conversationContainer.empty();	
-$('#chatURL').val(my.hostname.concat(my.roomName));
+$('#chatURL').val(my.hostname.concat('/',my.roomName));
 setupColorPicker();
 showModalInterface();
 
