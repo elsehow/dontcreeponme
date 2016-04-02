@@ -45,12 +45,12 @@ var roomToUsernames = {}
 io.sockets.on('connection', function(socket) {
   
   socket.on('joinattempt', function(data) {
-    var validity = isUsernameValid(data.username, data.room)
+    var validity = isUserValid(data, data.room)
     if (validity.isValid) {
-      // store color in the session for this client
+      // store session variables for this user
       socket.color = data.color
-      // store username in the session for this client
       socket.username = data.username
+      socket.publicKey = data.publicKey
       // tell user that they've been accepted
       socket.emit(
         'authresponse',
@@ -87,6 +87,7 @@ io.sockets.on('connection', function(socket) {
 })
 
 function joinRoom(socket, roomName) {
+
   // store chatroom in the session for this client
   socket.roomName = roomName
 
@@ -95,7 +96,11 @@ function joinRoom(socket, roomName) {
   if (!(socket.roomName in roomToUsernames)) {
     roomToUsernames[socket.roomName] = {}
   }
-  roomToUsernames[socket.roomName][socket.username] = socket.color 
+  roomToUsernames[socket.roomName][socket.username] = {
+    color: socket.color,
+    username: socket.username,
+    publicKey: socket.publicKey
+  }
   updateUserList(socket)
 
   io.sockets.in(socket.roomName).emit(
@@ -143,9 +148,11 @@ function buildMessagePayload(pseudo, message) {
 
 var usernameRegex =  /[^a-zA-Z1-9]+/ // regular expression for validating usernames
 
-function isUsernameValid(username, roomName) {
+function isUserValid(join, roomName) {
   var isValid = false
   var message = ''
+
+  var username = join.username
 
   if (!username || username.length == 0) {
     // pseudo must not be null or empty
@@ -159,6 +166,8 @@ function isUsernameValid(username, roomName) {
   } else if (roomToUsernames[roomName] && username in roomToUsernames[roomName]) {
     // username must be unique within this room
     message = "That pseudonym's already taken in this room."
+  } if (!join.publicKey) {
+    message = "You need a public key!"
   } else {
     isValid = true
   }
