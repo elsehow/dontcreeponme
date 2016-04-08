@@ -2,12 +2,19 @@ var box = require('private-box')
 var sodium = require('chloride/browser')
 var keypair = sodium.crypto_box_keypair
 var JSONB = require('json-buffer')
+var Notify = require('notifyjs');
 
 // ````````````````````````````
 // initialization
 // ,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
 my = {}
+
+Notify.requestPermission(function () {
+  my.notifyPerm = true
+}, function () {
+  my.notifyPerm = false
+})
 
 my.hostname = 'http://localhost:18696'
 my.colorpalette =  [
@@ -73,7 +80,19 @@ my.socket.on('message', function(data) {
 	if (!my.windowIsInFocus || !my.scrolledToBottom)  my.unreadMessageCount++;
 
 	if (!my.windowIsInFocus) {
+    // show counter in page title
 		updatePageTitle();
+    // if we have permission,
+    if (my.notifyPerm) {
+      // show a notification
+      new Notify('dcom - ' + my.roomName , {
+        body: 'new message from ' + from,
+        silent: true,
+        timeout: 3000,
+        tag: 'dcom',
+      }).show()
+    }
+
 	} 
 });
 
